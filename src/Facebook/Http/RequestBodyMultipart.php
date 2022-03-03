@@ -60,7 +60,7 @@ class RequestBodyMultipart implements RequestBodyInterface
     {
         $this->params = $params;
         $this->files = $files;
-        $this->boundary = $boundary ?: uniqid();
+        $this->boundary = $boundary ?: uniqid('', true);
     }
 
     /**

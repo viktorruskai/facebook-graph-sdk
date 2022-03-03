@@ -157,7 +157,7 @@ class FacebookBatchRequest extends FacebookRequest implements IteratorAggregate,
         $files = $request->getFiles();
         $fileNames = [];
         foreach ($files as $file) {
-            $fileName = uniqid();
+            $fileName = uniqid('', true);
             $this->addFile($fileName, $file);
             $fileNames[] = $fileName;
         }

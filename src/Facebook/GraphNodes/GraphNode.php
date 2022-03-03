@@ -23,6 +23,8 @@
  */
 namespace Facebook\GraphNodes;
 
+use DateTimeInterface;
+
 /**
  * Class GraphNode
  *
@@ -87,7 +89,7 @@ class GraphNode extends Collection
 
         return array_map(function ($v) {
             if ($v instanceof \DateTime) {
-                return $v->format(\DateTime::ISO8601);
+                return $v->format(DateTimeInterface::ATOM);
             }
 
             return $v;
