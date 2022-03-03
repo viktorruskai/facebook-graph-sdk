@@ -5,6 +5,7 @@
     "type": "library",
     "homepage": "https://github.com/facebook/php-graph-sdk",
     "license": "Facebook Platform",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Facebook",
