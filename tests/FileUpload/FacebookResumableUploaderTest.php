@@ -30,8 +30,9 @@ use Facebook\FacebookClient;
 use Facebook\FileUpload\FacebookResumableUploader;
 use Facebook\FileUpload\FacebookTransferChunk;
 use Facebook\Tests\Fixtures\FakeGraphApiForResumableUpload;
+use PHPUnit\Framework\TestCase;
 
-class FacebookResumableUploaderTest extends \PHPUnit_Framework_TestCase
+class FacebookResumableUploaderTest extends TestCase
 {
     /**
      * @var FacebookApp
@@ -53,7 +54,7 @@ class FacebookResumableUploaderTest extends \PHPUnit_Framework_TestCase
      */
     private $file;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fbApp = new FacebookApp('app_id', 'app_secret');
         $this->graphApi = new FakeGraphApiForResumableUpload();

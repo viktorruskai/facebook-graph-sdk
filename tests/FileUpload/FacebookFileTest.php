@@ -24,12 +24,13 @@
 namespace Facebook\Tests\FileUpload;
 
 use Facebook\FileUpload\FacebookFile;
+use PHPUnit\Framework\TestCase;
 
-class FacebookFileTest extends \PHPUnit_Framework_TestCase
+class FacebookFileTest extends TestCase
 {
     protected $testFile = '';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->testFile = __DIR__ . '/../foo.txt';
     }

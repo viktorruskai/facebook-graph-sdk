@@ -24,8 +24,9 @@
 namespace Facebook\Tests\PseudoRandomString;
 
 use Facebook\PseudoRandomString\RandomBytesPseudoRandomStringGenerator;
+use PHPUnit\Framework\TestCase;
 
-class RandomBytesPseudoRandomStringGeneratorTest extends \PHPUnit_Framework_TestCase
+class RandomBytesPseudoRandomStringGeneratorTest extends TestCase
 {
     public function testCanGenerateRandomStringOfArbitraryLength()
     {
@@ -38,7 +39,7 @@ class RandomBytesPseudoRandomStringGeneratorTest extends \PHPUnit_Framework_Test
         $csprng = new RandomBytesPseudoRandomStringGenerator;
         $randomString = $csprng->getPseudoRandomString(10);
 
-        $this->assertEquals(1, preg_match('/^([0-9a-f]+)$/', $randomString));
+        $this->assertMatchesRegularExpression('/^([0-9a-f]+)$/', $randomString);
         $this->assertEquals(10, strlen($randomString));
     }
 }

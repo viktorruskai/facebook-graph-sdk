@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Helpers;
 
 use Facebook\FacebookApp;
@@ -33,17 +36,14 @@ use Facebook\FacebookClient;
  */
 class FacebookPageTabHelper extends FacebookCanvasHelper
 {
-    /**
-     * @var array|null
-     */
-    protected $pageData;
+    protected ?array $pageData;
 
     /**
      * Initialize the helper and process available signed request data.
      *
-     * @param FacebookApp    $app          The FacebookApp entity.
-     * @param FacebookClient $client       The client to make HTTP requests.
-     * @param string|null    $graphVersion The version of Graph to use.
+     * @param FacebookApp $app The FacebookApp entity.
+     * @param FacebookClient $client The client to make HTTP requests.
+     * @param string|null $graphVersion The version of Graph to use.
      */
     public function __construct(FacebookApp $app, FacebookClient $client, $graphVersion = null)
     {
@@ -59,36 +59,28 @@ class FacebookPageTabHelper extends FacebookCanvasHelper
     /**
      * Returns a value from the page data.
      *
-     * @param string     $key
+     * @param string $key
      * @param mixed|null $default
      *
      * @return mixed|null
      */
-    public function getPageData($key, $default = null)
+    public function getPageData(string $key, mixed $default = null): mixed
     {
-        if (isset($this->pageData[$key])) {
-            return $this->pageData[$key];
-        }
-
-        return $default;
+        return $this->pageData[$key] ?? $default;
     }
 
     /**
      * Returns true if the user is an admin.
-     *
-     * @return boolean
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->getPageData('admin') === true;
     }
 
     /**
      * Returns the page id if available.
-     *
-     * @return string|null
      */
-    public function getPageId()
+    public function getPageId(): ?string
     {
         return $this->getPageData('id');
     }

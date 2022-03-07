@@ -26,8 +26,9 @@ namespace Facebook\Tests\Authentication;
 use Facebook\Facebook;
 use Facebook\FacebookApp;
 use Facebook\Authentication\OAuth2Client;
+use PHPUnit\Framework\TestCase;
 
-class OAuth2ClientTest extends \PHPUnit_Framework_TestCase
+class OAuth2ClientTest extends TestCase
 {
 
     /**
@@ -45,7 +46,7 @@ class OAuth2ClientTest extends \PHPUnit_Framework_TestCase
      */
     protected $oauth;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
         $this->client = new FooFacebookClientForOAuth2Test();

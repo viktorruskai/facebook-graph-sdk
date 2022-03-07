@@ -24,15 +24,16 @@
 namespace Facebook\Tests;
 
 use Facebook\FacebookApp;
+use PHPUnit\Framework\TestCase;
 
-class FacebookAppTest extends \PHPUnit_Framework_TestCase
+class FacebookAppTest extends TestCase
 {
     /**
      * @var FacebookApp
      */
     private $app;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = new FacebookApp('id', 'secret');
     }

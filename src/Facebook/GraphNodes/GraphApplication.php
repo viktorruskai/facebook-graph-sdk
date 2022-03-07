@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 /**
@@ -28,15 +31,12 @@ namespace Facebook\GraphNodes;
  *
  * @package Facebook
  */
-
 class GraphApplication extends GraphNode
 {
     /**
      * Returns the ID for the application.
-     *
-     * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->getField('id');
     }

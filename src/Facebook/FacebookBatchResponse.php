@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,11 +23,13 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook;
 
+use ArrayAccess;
 use ArrayIterator;
 use IteratorAggregate;
-use ArrayAccess;
+use JsonException;
 
 /**
  * Class FacebookBatchResponse
@@ -37,18 +41,17 @@ class FacebookBatchResponse extends FacebookResponse implements IteratorAggregat
     /**
      * @var FacebookBatchRequest The original entity that made the batch request.
      */
-    protected $batchRequest;
+    protected FacebookBatchRequest $batchRequest;
 
     /**
      * @var array An array of FacebookResponse entities.
      */
-    protected $responses = [];
+    protected array $responses = [];
 
     /**
      * Creates a new Response entity.
      *
-     * @param FacebookBatchRequest $batchRequest
-     * @param FacebookResponse     $response
+     * @throws JsonException
      */
     public function __construct(FacebookBatchRequest $batchRequest, FacebookResponse $response)
     {
@@ -67,20 +70,20 @@ class FacebookBatchResponse extends FacebookResponse implements IteratorAggregat
     /**
      * Returns an array of FacebookResponse entities.
      *
-     * @return array
+     * @return array<FacebookResponse>
      */
-    public function getResponses()
+    public function getResponses(): array
     {
         return $this->responses;
     }
 
     /**
-     * The main batch response will be an array of requests so
+     * The main batch response will be an array of requests, so
      * we need to iterate over all the responses.
      *
-     * @param array $responses
+     * @throws JsonException
      */
-    public function setResponses(array $responses)
+    public function setResponses(array $responses): void
     {
         $this->responses = [];
 
@@ -92,17 +95,16 @@ class FacebookBatchResponse extends FacebookResponse implements IteratorAggregat
     /**
      * Add a response to the list.
      *
-     * @param int        $key
-     * @param array|null $response
+     * @throws JsonException
      */
-    public function addResponse($key, $response)
+    public function addResponse(int $key, ?array $response): void
     {
-        $originalRequestName = isset($this->batchRequest[$key]['name']) ? $this->batchRequest[$key]['name'] : $key;
-        $originalRequest = isset($this->batchRequest[$key]['request']) ? $this->batchRequest[$key]['request'] : null;
+        $originalRequestName = $this->batchRequest[$key]['name'] ?? $key;
+        $originalRequest = $this->batchRequest[$key]['request'] ?? null;
 
-        $httpResponseBody = isset($response['body']) ? $response['body'] : null;
-        $httpResponseCode = isset($response['code']) ? $response['code'] : null;
-        // @TODO With PHP 5.5 support, this becomes array_column($response['headers'], 'value', 'name')
+        $httpResponseBody = $response['body'] ?? null;
+        $httpResponseCode = $response['code'] ?? null;
+
         $httpResponseHeaders = isset($response['headers']) ? $this->normalizeBatchHeaders($response['headers']) : [];
 
         $this->responses[$originalRequestName] = new FacebookResponse(
@@ -116,15 +118,17 @@ class FacebookBatchResponse extends FacebookResponse implements IteratorAggregat
     /**
      * @inheritdoc
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->responses);
     }
 
     /**
      * @inheritdoc
+     *
+     * @throws JsonException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->addResponse($offset, $value);
     }
@@ -132,7 +136,7 @@ class FacebookBatchResponse extends FacebookResponse implements IteratorAggregat
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->responses[$offset]);
     }
@@ -140,7 +144,7 @@ class FacebookBatchResponse extends FacebookResponse implements IteratorAggregat
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->responses[$offset]);
     }
@@ -148,27 +152,16 @@ class FacebookBatchResponse extends FacebookResponse implements IteratorAggregat
     /**
      * @inheritdoc
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
-        return isset($this->responses[$offset]) ? $this->responses[$offset] : null;
+        return $this->responses[$offset] ?? null;
     }
 
     /**
      * Converts the batch header array into a standard format.
-     * @TODO replace with array_column() when PHP 5.5 is supported.
-     *
-     * @param array $batchHeaders
-     *
-     * @return array
      */
-    private function normalizeBatchHeaders(array $batchHeaders)
+    private function normalizeBatchHeaders(array $batchHeaders): array
     {
-        $headers = [];
-
-        foreach ($batchHeaders as $header) {
-            $headers[$header['name']] = $header['value'];
-        }
-
-        return $headers;
+        return array_column($batchHeaders, 'value', 'name');
     }
 }

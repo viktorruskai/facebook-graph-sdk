@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,9 +23,13 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
+use DateTime;
 use DateTimeInterface;
+use Exception;
+use JsonException;
 
 /**
  * Class GraphNode
@@ -35,7 +41,7 @@ class GraphNode extends Collection
     /**
      * @var array Maps object key names to Graph object types.
      */
-    protected static $graphObjectMap = [];
+    protected static array $graphObjectMap = [];
 
     /**
      * Init this Graph object.
@@ -53,11 +59,8 @@ class GraphNode extends Collection
      *
      * @TODO Add auto-casting to AccessToken entities.
      *
-     * @param array $data The array to iterate over.
-     *
-     * @return array
      */
-    public function castItems(array $data)
+    public function castItems(array $data): array
     {
         $items = [];
 
@@ -78,48 +81,31 @@ class GraphNode extends Collection
     }
 
     /**
-     * Uncasts any auto-casted datatypes.
-     * Basically the reverse of castItems().
-     *
-     * @return array
+     * Determines if a value from Graph should be cast to DateTime.
      */
-    public function uncastItems()
+    public function shouldCastAsDateTime(string $key): bool
     {
-        $items = $this->asArray();
-
-        return array_map(function ($v) {
-            if ($v instanceof \DateTime) {
-                return $v->format(DateTimeInterface::ATOM);
-            }
-
-            return $v;
-        }, $items);
-    }
-
-    /**
-     * Get the collection of items as JSON.
-     *
-     * @param int $options
-     *
-     * @return string
-     */
-    public function asJson($options = 0)
-    {
-        return json_encode($this->uncastItems(), $options);
+        return in_array($key, [
+            'created_time',
+            'updated_time',
+            'start_time',
+            'end_time',
+            'backdated_time',
+            'issued_at',
+            'expires_at',
+            'publish_time',
+            'joined'
+        ], true);
     }
 
     /**
      * Detects an ISO 8601 formatted string.
      *
-     * @param string $string
-     *
-     * @return boolean
-     *
      * @see https://developers.facebook.com/docs/graph-api/using-graph-api/#readmodifiers
      * @see http://www.cl.cam.ac.uk/~mgk25/iso-time.html
      * @see http://en.wikipedia.org/wiki/ISO_8601
      */
-    public function isIso8601DateString($string)
+    public function isIso8601DateString(string $string): bool
     {
         // This insane regex was yoinked from here:
         // http://www.pelagodesign.com/blog/2009/05/20/iso-8601-date-validation-that-doesnt-suck/
@@ -136,41 +122,17 @@ class GraphNode extends Collection
     }
 
     /**
-     * Determines if a value from Graph should be cast to DateTime.
-     *
-     * @param string $key
-     *
-     * @return boolean
-     */
-    public function shouldCastAsDateTime($key)
-    {
-        return in_array($key, [
-            'created_time',
-            'updated_time',
-            'start_time',
-            'end_time',
-            'backdated_time',
-            'issued_at',
-            'expires_at',
-            'publish_time',
-            'joined'
-        ], true);
-    }
-
-    /**
      * Casts a date value from Graph to DateTime.
      *
-     * @param int|string $value
-     *
-     * @return \DateTime
+     * @throws Exception
      */
-    public function castToDateTime($value)
+    public function castToDateTime(int|string $value): DateTime
     {
         if (is_int($value)) {
-            $dt = new \DateTime();
+            $dt = new DateTime();
             $dt->setTimestamp($value);
         } else {
-            $dt = new \DateTime($value);
+            $dt = new DateTime($value);
         }
 
         return $dt;
@@ -179,22 +141,47 @@ class GraphNode extends Collection
     /**
      * Casts a birthday value from Graph to Birthday
      *
-     * @param string $value
-     *
-     * @return Birthday
+     * @throws Exception
      */
-    public function castToBirthday($value)
+    public function castToBirthday(string $value): Birthday
     {
         return new Birthday($value);
     }
 
     /**
      * Getter for $graphObjectMap.
+     */
+    public static function getObjectMap(): array
+    {
+        return static::$graphObjectMap;
+    }
+
+    /**
+     * Get the collection of items as JSON.
+     *
+     * @throws JsonException
+     */
+    public function asJson(int $options = 0): string
+    {
+        return json_encode($this->uncastItems(), JSON_THROW_ON_ERROR | $options);
+    }
+
+    /**
+     * Uncasts any auto-casted datatypes.
+     * Basically the reverse of castItems().
      *
      * @return array
      */
-    public static function getObjectMap()
+    public function uncastItems(): array
     {
-        return static::$graphObjectMap;
+        $items = $this->asArray();
+
+        return array_map(static function ($v) {
+            if ($v instanceof DateTime) {
+                return $v->format(DateTimeInterface::ATOM);
+            }
+
+            return $v;
+        }, $items);
     }
 }

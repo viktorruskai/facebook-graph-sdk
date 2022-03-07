@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\FileUpload;
 
 /**
@@ -34,11 +37,10 @@ namespace Facebook\FileUpload;
  */
 class Mimetypes
 {
-    /** @var self */
-    protected static $instance;
+    protected static Mimetypes $instance;
 
-    /** @var array Mapping of extension to mimetype */
-    protected $mimetypes = [
+    /** Mapping of extension to mimetype */
+    protected array $mimetypes = [
         '3dml' => 'text/vnd.in3d.3dml',
         '3g2' => 'video/3gpp2',
         '3gp' => 'video/3gpp',
@@ -951,7 +953,7 @@ class Mimetypes
      * @return self
      * @codeCoverageIgnore
      */
-    public static function getInstance()
+    public static function getInstance(): Mimetypes
     {
         if (!self::$instance) {
             self::$instance = new self();
@@ -964,24 +966,20 @@ class Mimetypes
      * Get a mimetype value from a file extension
      *
      * @param string $extension File extension
-     *
-     * @return string|null
      */
-    public function fromExtension($extension)
+    public function fromExtension(string $extension): ?string
     {
         $extension = strtolower($extension);
 
-        return isset($this->mimetypes[$extension]) ? $this->mimetypes[$extension] : null;
+        return $this->mimetypes[$extension] ?? null;
     }
 
     /**
      * Get a mimetype from a filename
      *
      * @param string $filename Filename to generate a mimetype from
-     *
-     * @return string|null
      */
-    public function fromFilename($filename)
+    public function fromFilename(string $filename): ?string
     {
         return $this->fromExtension(pathinfo($filename, PATHINFO_EXTENSION));
     }

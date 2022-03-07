@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,11 +23,21 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook;
 
-use Facebook\GraphNodes\GraphNodeFactory;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
+use Facebook\GraphNodes\GraphAlbum;
+use Facebook\GraphNodes\GraphEdge;
+use Facebook\GraphNodes\GraphEvent;
+use Facebook\GraphNodes\GraphGroup;
+use Facebook\GraphNodes\GraphNode;
+use Facebook\GraphNodes\GraphNodeFactory;
+use Facebook\GraphNodes\GraphPage;
+use Facebook\GraphNodes\GraphSessionInfo;
+use Facebook\GraphNodes\GraphUser;
+use JsonException;
 
 /**
  * Class FacebookResponse
@@ -35,44 +47,41 @@ use Facebook\Exceptions\FacebookSDKException;
 class FacebookResponse
 {
     /**
-     * @var int The HTTP status code response from Graph.
+     * @var int|null The HTTP status code response from Graph.
      */
-    protected $httpStatusCode;
+    protected ?int $httpStatusCode;
 
     /**
      * @var array The headers returned from Graph.
      */
-    protected $headers;
+    protected array $headers;
 
     /**
-     * @var string The raw body of the response from Graph.
+     * @var string|null The raw body of the response from Graph.
      */
-    protected $body;
+    protected ?string $body;
 
     /**
      * @var array The decoded body of the Graph response.
      */
-    protected $decodedBody = [];
+    protected array $decodedBody = [];
 
     /**
      * @var FacebookRequest The original request that returned this response.
      */
-    protected $request;
+    protected FacebookRequest $request;
 
     /**
      * @var FacebookSDKException The exception thrown by this request.
      */
-    protected $thrownException;
+    protected FacebookSDKException $thrownException;
 
     /**
      * Creates a new Response entity.
      *
-     * @param FacebookRequest $request
-     * @param string|null     $body
-     * @param int|null        $httpStatusCode
-     * @param array|null      $headers
+     * @throws JsonException
      */
-    public function __construct(FacebookRequest $request, $body = null, $httpStatusCode = null, array $headers = [])
+    public function __construct(FacebookRequest $request, ?string $body = null, ?int $httpStatusCode = null, array $headers = [])
     {
         $this->request = $request;
         $this->body = $body;
@@ -84,110 +93,88 @@ class FacebookResponse
 
     /**
      * Return the original request that returned this response.
-     *
-     * @return FacebookRequest
      */
-    public function getRequest()
+    public function getRequest(): FacebookRequest
     {
         return $this->request;
     }
 
     /**
      * Return the FacebookApp entity used for this response.
-     *
-     * @return FacebookApp
      */
-    public function getApp()
+    public function getApp(): FacebookApp
     {
         return $this->request->getApp();
     }
 
     /**
      * Return the access token that was used for this response.
-     *
-     * @return string|null
      */
-    public function getAccessToken()
+    public function getAccessToken(): ?string
     {
         return $this->request->getAccessToken();
     }
 
     /**
      * Return the HTTP status code for this response.
-     *
-     * @return int
      */
-    public function getHttpStatusCode()
+    public function getHttpStatusCode(): ?int
     {
         return $this->httpStatusCode;
     }
 
     /**
      * Return the HTTP headers for this response.
-     *
-     * @return array
      */
-    public function getHeaders()
+    public function getHeaders(): ?array
     {
         return $this->headers;
     }
 
     /**
      * Return the raw body response.
-     *
-     * @return string
      */
-    public function getBody()
+    public function getBody(): ?string
     {
         return $this->body;
     }
 
     /**
      * Return the decoded body response.
-     *
-     * @return array
      */
-    public function getDecodedBody()
+    public function getDecodedBody(): array
     {
         return $this->decodedBody;
     }
 
     /**
      * Get the app secret proof that was used for this response.
-     *
-     * @return string|null
      */
-    public function getAppSecretProof()
+    public function getAppSecretProof(): ?string
     {
         return $this->request->getAppSecretProof();
     }
 
     /**
      * Get the ETag associated with the response.
-     *
-     * @return string|null
      */
-    public function getETag()
+    public function getETag(): ?string
     {
-        return isset($this->headers['ETag']) ? $this->headers['ETag'] : null;
+        return $this->headers['ETag'] ?? null;
     }
 
     /**
      * Get the version of Graph that returned this response.
-     *
-     * @return string|null
      */
-    public function getGraphVersion()
+    public function getGraphVersion(): ?string
     {
-        return isset($this->headers['Facebook-API-Version']) ? $this->headers['Facebook-API-Version'] : null;
+        return $this->headers['Facebook-API-Version'] ?? null;
     }
 
     /**
      * Returns true if Graph returned an error message.
-     *
-     * @return boolean
      */
-    public function isError()
+    public function isError(): bool
     {
         return isset($this->decodedBody['error']);
     }
@@ -197,7 +184,7 @@ class FacebookResponse
      *
      * @throws FacebookSDKException
      */
-    public function throwException()
+    public function throwException(): void
     {
         throw $this->thrownException;
     }
@@ -205,17 +192,15 @@ class FacebookResponse
     /**
      * Instantiates an exception to be thrown later.
      */
-    public function makeException()
+    public function makeException(): void
     {
         $this->thrownException = FacebookResponseException::create($this);
     }
 
     /**
      * Returns the exception that was thrown for this request.
-     *
-     * @return FacebookResponseException|null
      */
-    public function getThrownException()
+    public function getThrownException(): FacebookSDKException|FacebookResponseException|null
     {
         return $this->thrownException;
     }
@@ -230,24 +215,26 @@ class FacebookResponse
      *    Happens on the `/oauth/access_token` endpoint when exchanging
      *    a short-lived access token for a long-lived access token
      * - And sometimes nothing :/ but that'd be a bug.
+     *
+     * @throws JsonException
      */
-    public function decodeBody()
+    public function decodeBody(): void
     {
-        $this->decodedBody = json_decode($this->body, true);
+        $decodedBody = json_decode($this->body, true, 512, JSON_THROW_ON_ERROR);
 
-        if ($this->decodedBody === null) {
+        if ($decodedBody === null) {
             $this->decodedBody = [];
-            parse_str($this->body, $this->decodedBody);
-        } elseif (is_bool($this->decodedBody)) {
+            parse_str($this->body, $decodedBody);
+        } elseif (is_bool($decodedBody)) {
             // Backwards compatibility for Graph < 2.1.
             // Mimics 2.1 responses.
             // @TODO Remove this after Graph 2.0 is no longer supported
-            $this->decodedBody = ['success' => $this->decodedBody];
-        } elseif (is_numeric($this->decodedBody)) {
-            $this->decodedBody = ['id' => $this->decodedBody];
+            $this->decodedBody = ['success' => $decodedBody];
+        } elseif (is_numeric($decodedBody)) {
+            $this->decodedBody = ['id' => $decodedBody];
         }
 
-        if (!is_array($this->decodedBody)) {
+        if (!is_array($decodedBody)) {
             $this->decodedBody = [];
         }
 
@@ -257,154 +244,87 @@ class FacebookResponse
     }
 
     /**
-     * Instantiate a new GraphObject from response.
-     *
-     * @param string|null $subclassName The GraphNode subclass to cast to.
-     *
-     * @return \Facebook\GraphNodes\GraphObject
-     *
-     * @throws FacebookSDKException
-     *
-     * @deprecated 5.0.0 getGraphObject() has been renamed to getGraphNode()
-     * @todo v6: Remove this method
-     */
-    public function getGraphObject($subclassName = null)
-    {
-        return $this->getGraphNode($subclassName);
-    }
-
-    /**
      * Instantiate a new GraphNode from response.
      *
      * @param string|null $subclassName The GraphNode subclass to cast to.
      *
-     * @return \Facebook\GraphNodes\GraphNode
-     *
      * @throws FacebookSDKException
      */
-    public function getGraphNode($subclassName = null)
+    public function getGraphNode(string $subclassName = null): GraphNode
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphNode($subclassName);
+        return (new GraphNodeFactory($this))->makeGraphNode($subclassName);
     }
 
     /**
      * Convenience method for creating a GraphAlbum collection.
      *
-     * @return \Facebook\GraphNodes\GraphAlbum
-     *
      * @throws FacebookSDKException
      */
-    public function getGraphAlbum()
+    public function getGraphAlbum(): GraphAlbum
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphAlbum();
+        return (new GraphNodeFactory($this))->makeGraphAlbum();
     }
 
     /**
      * Convenience method for creating a GraphPage collection.
      *
-     * @return \Facebook\GraphNodes\GraphPage
-     *
      * @throws FacebookSDKException
      */
-    public function getGraphPage()
+    public function getGraphPage(): GraphPage
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphPage();
+        return (new GraphNodeFactory($this))->makeGraphPage();
     }
 
     /**
      * Convenience method for creating a GraphSessionInfo collection.
      *
-     * @return \Facebook\GraphNodes\GraphSessionInfo
-     *
      * @throws FacebookSDKException
      */
-    public function getGraphSessionInfo()
+    public function getGraphSessionInfo(): GraphSessionInfo
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphSessionInfo();
+        return (new GraphNodeFactory($this))->makeGraphSessionInfo();
     }
 
     /**
      * Convenience method for creating a GraphUser collection.
      *
-     * @return \Facebook\GraphNodes\GraphUser
-     *
      * @throws FacebookSDKException
      */
-    public function getGraphUser()
+    public function getGraphUser(): GraphUser
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphUser();
+        return (new GraphNodeFactory($this))->makeGraphUser();
     }
 
     /**
      * Convenience method for creating a GraphEvent collection.
      *
-     * @return \Facebook\GraphNodes\GraphEvent
-     *
      * @throws FacebookSDKException
      */
-    public function getGraphEvent()
+    public function getGraphEvent(): GraphEvent
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphEvent();
+        return (new GraphNodeFactory($this))->makeGraphEvent();
     }
 
     /**
      * Convenience method for creating a GraphGroup collection.
      *
-     * @return \Facebook\GraphNodes\GraphGroup
-     *
      * @throws FacebookSDKException
      */
-    public function getGraphGroup()
+    public function getGraphGroup(): GraphGroup
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphGroup();
-    }
-
-    /**
-     * Instantiate a new GraphList from response.
-     *
-     * @param string|null $subclassName The GraphNode subclass to cast list items to.
-     * @param boolean     $auto_prefix  Toggle to auto-prefix the subclass name.
-     *
-     * @return \Facebook\GraphNodes\GraphList
-     *
-     * @throws FacebookSDKException
-     *
-     * @deprecated 5.0.0 getGraphList() has been renamed to getGraphEdge()
-     * @todo v6: Remove this method
-     */
-    public function getGraphList($subclassName = null, $auto_prefix = true)
-    {
-        return $this->getGraphEdge($subclassName, $auto_prefix);
+        return (new GraphNodeFactory($this))->makeGraphGroup();
     }
 
     /**
      * Instantiate a new GraphEdge from response.
      *
      * @param string|null $subclassName The GraphNode subclass to cast list items to.
-     * @param boolean     $auto_prefix  Toggle to auto-prefix the subclass name.
-     *
-     * @return \Facebook\GraphNodes\GraphEdge
+     * @param boolean $auto_prefix Toggle to auto-prefix the subclass name.
      *
      * @throws FacebookSDKException
      */
-    public function getGraphEdge($subclassName = null, $auto_prefix = true)
+    public function getGraphEdge(?string $subclassName = null, bool $auto_prefix = true): GraphEdge
     {
-        $factory = new GraphNodeFactory($this);
-
-        return $factory->makeGraphEdge($subclassName, $auto_prefix);
+        return (new GraphNodeFactory($this))->makeGraphEdge($subclassName, $auto_prefix);
     }
 }

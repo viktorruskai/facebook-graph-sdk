@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 /**
@@ -33,90 +36,74 @@ class GraphPage extends GraphNode
     /**
      * @var array Maps object key names to Graph object types.
      */
-    protected static $graphObjectMap = [
-        'best_page' => '\Facebook\GraphNodes\GraphPage',
-        'global_brand_parent_page' => '\Facebook\GraphNodes\GraphPage',
-        'location' => '\Facebook\GraphNodes\GraphLocation',
-        'cover' => '\Facebook\GraphNodes\GraphCoverPhoto',
-        'picture' => '\Facebook\GraphNodes\GraphPicture',
+    protected static array $graphObjectMap = [
+        'best_page' => GraphPage::class,
+        'global_brand_parent_page' => GraphPage::class,
+        'location' => GraphLocation::class,
+        'cover' => GraphCoverPhoto::class,
+        'picture' => GraphPicture::class,
     ];
 
     /**
      * Returns the ID for the user's page as a string if present.
-     *
-     * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->getField('id');
     }
 
     /**
      * Returns the Category for the user's page as a string if present.
-     *
-     * @return string|null
      */
-    public function getCategory()
+    public function getCategory(): ?string
     {
         return $this->getField('category');
     }
 
     /**
      * Returns the Name of the user's page as a string if present.
-     *
-     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->getField('name');
     }
 
     /**
      * Returns the best available Page on Facebook.
-     *
-     * @return GraphPage|null
      */
-    public function getBestPage()
+    public function getBestPage(): ?GraphPage
     {
         return $this->getField('best_page');
     }
 
     /**
      * Returns the brand's global (parent) Page.
-     *
-     * @return GraphPage|null
      */
-    public function getGlobalBrandParentPage()
+    public function getGlobalBrandParentPage(): ?GraphPage
     {
         return $this->getField('global_brand_parent_page');
     }
 
     /**
      * Returns the location of this place.
-     *
-     * @return GraphLocation|null
      */
-    public function getLocation()
+    public function getLocation(): ?GraphLocation
     {
         return $this->getField('location');
     }
 
     /**
      * Returns CoverPhoto of the Page.
-     *
-     * @return GraphCoverPhoto|null
      */
-    public function getCover()
+    public function getCover(): ?GraphCoverPhoto
     {
         return $this->getField('cover');
     }
 
     /**
      * Returns Picture of the Page.
-     *
-     * @return GraphPicture|null
      */
-    public function getPicture()
+    public function getPicture(): ?GraphPicture
     {
         return $this->getField('picture');
     }
@@ -125,10 +112,8 @@ class GraphPage extends GraphNode
      * Returns the page access token for the admin user.
      *
      * Only available in the `/me/accounts` context.
-     *
-     * @return string|null
      */
-    public function getAccessToken()
+    public function getAccessToken(): ?string
     {
         return $this->getField('access_token');
     }
@@ -137,20 +122,16 @@ class GraphPage extends GraphNode
      * Returns the roles of the page admin user.
      *
      * Only available in the `/me/accounts` context.
-     *
-     * @return array|null
      */
-    public function getPerms()
+    public function getPerms(): ?array
     {
         return $this->getField('perms');
     }
 
     /**
      * Returns the `fan_count` (Number of people who likes to page) as int if present.
-     *
-     * @return int|null
      */
-    public function getFanCount()
+    public function getFanCount(): ?int
     {
         return $this->getField('fan_count');
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,14 +23,17 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Helpers;
 
+use Facebook\Authentication\AccessToken;
+use Facebook\Authentication\OAuth2Client;
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use Facebook\FacebookApp;
 use Facebook\FacebookClient;
 use Facebook\SignedRequest;
-use Facebook\Authentication\AccessToken;
-use Facebook\Authentication\OAuth2Client;
+use JsonException;
 
 /**
  * Class FacebookSignedRequestFromInputHelper
@@ -40,26 +45,29 @@ abstract class FacebookSignedRequestFromInputHelper
     /**
      * @var SignedRequest|null The SignedRequest entity.
      */
-    protected $signedRequest;
+    protected ?SignedRequest $signedRequest;
 
     /**
      * @var FacebookApp The FacebookApp entity.
      */
-    protected $app;
+    protected FacebookApp $app;
 
     /**
      * @var OAuth2Client The OAuth 2.0 client service.
      */
-    protected $oAuth2Client;
+    protected OAuth2Client $oAuth2Client;
 
     /**
      * Initialize the helper and process available signed request data.
      *
-     * @param FacebookApp    $app          The FacebookApp entity.
-     * @param FacebookClient $client       The client to make HTTP requests.
-     * @param string|null    $graphVersion The version of Graph to use.
+     * @param FacebookApp $app The FacebookApp entity.
+     * @param FacebookClient $client The client to make HTTP requests.
+     * @param string|null $graphVersion The version of Graph to use.
+     *
+     * @throws FacebookSDKException
+     * @throws JsonException
      */
-    public function __construct(FacebookApp $app, FacebookClient $client, $graphVersion = null)
+    public function __construct(FacebookApp $app, FacebookClient $client, string $graphVersion = null)
     {
         $this->app = $app;
         $graphVersion = $graphVersion ?: Facebook::DEFAULT_GRAPH_VERSION;
@@ -71,9 +79,10 @@ abstract class FacebookSignedRequestFromInputHelper
     /**
      * Instantiates a new SignedRequest entity.
      *
-     * @param string|null
+     * @throws FacebookSDKException
+     * @throws JsonException
      */
-    public function instantiateSignedRequest($rawSignedRequest = null)
+    public function instantiateSignedRequest(?string $rawSignedRequest = null): void
     {
         $rawSignedRequest = $rawSignedRequest ?: $this->getRawSignedRequest();
 
@@ -87,11 +96,9 @@ abstract class FacebookSignedRequestFromInputHelper
     /**
      * Returns an AccessToken entity from the signed request.
      *
-     * @return AccessToken|null
-     *
-     * @throws \Facebook\Exceptions\FacebookSDKException
+     * @throws FacebookSDKException
      */
-    public function getAccessToken()
+    public function getAccessToken(): ?AccessToken
     {
         if ($this->signedRequest && $this->signedRequest->hasOAuthData()) {
             $code = $this->signedRequest->get('code');
@@ -111,22 +118,18 @@ abstract class FacebookSignedRequestFromInputHelper
 
     /**
      * Returns the SignedRequest entity.
-     *
-     * @return SignedRequest|null
      */
-    public function getSignedRequest()
+    public function getSignedRequest(): ?SignedRequest
     {
         return $this->signedRequest;
     }
 
     /**
      * Returns the user_id if available.
-     *
-     * @return string|null
      */
-    public function getUserId()
+    public function getUserId(): ?string
     {
-        return $this->signedRequest ? $this->signedRequest->getUserId() : null;
+        return $this->signedRequest?->getUserId();
     }
 
     /**
@@ -134,33 +137,21 @@ abstract class FacebookSignedRequestFromInputHelper
      *
      * @return string|null
      */
-    abstract public function getRawSignedRequest();
+    abstract public function getRawSignedRequest(): ?string;
 
     /**
      * Get raw signed request from POST input.
-     *
-     * @return string|null
      */
-    public function getRawSignedRequestFromPost()
+    public function getRawSignedRequestFromPost(): ?string
     {
-        if (isset($_POST['signed_request'])) {
-            return $_POST['signed_request'];
-        }
-
-        return null;
+        return $_POST['signed_request'] ?? null;
     }
 
     /**
      * Get raw signed request from cookie set from the Javascript SDK.
-     *
-     * @return string|null
      */
-    public function getRawSignedRequestFromCookie()
+    public function getRawSignedRequestFromCookie(): ?string
     {
-        if (isset($_COOKIE['fbsr_' . $this->app->getId()])) {
-            return $_COOKIE['fbsr_' . $this->app->getId()];
-        }
-
-        return null;
+        return $_COOKIE['fbsr_' . $this->app->getId()] ?? null;
     }
 }
