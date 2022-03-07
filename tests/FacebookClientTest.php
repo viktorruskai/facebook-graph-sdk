@@ -37,7 +37,9 @@ use Facebook\HttpClients\FacebookGuzzleHttpClient;
 use Facebook\HttpClients\FacebookStreamHttpClient;
 use Facebook\Tests\Fixtures\MyFooBatchClientHandler;
 use Facebook\Tests\Fixtures\MyFooClientHandler;
+use JsonException;
 use PHPUnit\Framework\TestCase;
+use Facebook\FacebookBatchResponse;
 
 class FacebookClientTest extends TestCase
 {
@@ -133,7 +135,11 @@ class FacebookClientTest extends TestCase
         $this->assertEquals('{"data":[{"id":"123","name":"Foo"},{"id":"1337","name":"Bar"}]}', $response->getBody());
     }
 
-    public function testAFacebookBatchRequestEntityCanBeUsedToSendABatchRequestToGraph()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testAFacebookBatchRequestEntityCanBeUsedToSendABatchRequestToGraph(): void
     {
         $fbRequests = [
             new FacebookRequest($this->fbApp, 'token', 'GET', '/foo'),
@@ -144,7 +150,6 @@ class FacebookClientTest extends TestCase
         $fbBatchClient = new FacebookClient(new MyFooBatchClientHandler());
         $response = $fbBatchClient->sendBatchRequest($fbBatchRequest);
 
-        $this->assertInstanceOf('Facebook\FacebookBatchResponse', $response);
         $this->assertEquals('GET', $response[0]->getRequest()->getMethod());
         $this->assertEquals('POST', $response[1]->getRequest()->getMethod());
     }

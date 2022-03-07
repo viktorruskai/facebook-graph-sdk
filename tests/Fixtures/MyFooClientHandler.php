@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Fixtures;
 
 use Facebook\Http\GraphRawResponse;
@@ -28,7 +31,7 @@ use Facebook\HttpClients\FacebookHttpClientInterface;
 
 class MyFooClientHandler implements FacebookHttpClientInterface
 {
-    public function send($url, $method, $body, array $headers, $timeOut)
+    public function send($url, $method, $body, array $headers, $timeOut): GraphRawResponse
     {
         return new GraphRawResponse(
             "HTTP/1.1 200 OK\r\nDate: Mon, 19 May 2014 18:37:17 GMT",

@@ -92,7 +92,7 @@ class FacebookTransferChunk
     /**
      * Return upload session Id
      */
-    public function getUploadSessionId(): int
+    public function getUploadSessionId(): int|string
     {
         return $this->uploadSessionId;
     }

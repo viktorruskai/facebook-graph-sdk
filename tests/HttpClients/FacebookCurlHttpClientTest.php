@@ -91,6 +91,7 @@ class FacebookCurlHttpClientTest extends AbstractTestHttpClient
             ->andReturn(null);
 
         $this->curlClient->openConnection('http://foo.com', 'GET', 'foo_body', ['X-Foo-Header' => 'X-Bar'], 123);
+        $this->assertTrue(true);
     }
 
     public function testCanOpenCurlConnectionWithPostBody()
@@ -135,9 +136,10 @@ class FacebookCurlHttpClientTest extends AbstractTestHttpClient
             ->andReturn(null);
 
         $this->curlClient->openConnection('http://bar.com', 'POST', 'baz=bar', [], 60);
+        $this->assertTrue(true);
     }
 
-    public function testCanCloseConnection()
+    public function testCanCloseConnection(): void
     {
         $this->curlMock
             ->shouldReceive('close')
@@ -145,6 +147,7 @@ class FacebookCurlHttpClientTest extends AbstractTestHttpClient
             ->andReturn(null);
 
         $this->curlClient->closeConnection();
+        $this->assertTrue(true);
     }
 
     public function testIsolatesTheHeaderAndBody()
@@ -155,7 +158,7 @@ class FacebookCurlHttpClientTest extends AbstractTestHttpClient
             ->andReturn($this->fakeRawHeader . $this->fakeRawBody);
 
         $this->curlClient->sendRequest();
-        list($rawHeader, $rawBody) = $this->curlClient->extractResponseHeadersAndBody();
+        [$rawHeader, $rawBody] = $this->curlClient->extractResponseHeadersAndBody();
 
         $this->assertEquals($rawHeader, trim($this->fakeRawHeader));
         $this->assertEquals($rawBody, $this->fakeRawBody);
@@ -170,7 +173,7 @@ class FacebookCurlHttpClientTest extends AbstractTestHttpClient
             ->andReturn($rawHeader . $this->fakeRawBody);
 
         $this->curlClient->sendRequest();
-        list($rawHeaders, $rawBody) = $this->curlClient->extractResponseHeadersAndBody();
+        [$rawHeaders, $rawBody] = $this->curlClient->extractResponseHeadersAndBody();
 
         $this->assertEquals($rawHeaders, trim($rawHeader));
         $this->assertEquals($rawBody, $this->fakeRawBody);

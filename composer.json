@@ -46,5 +46,9 @@
       "dev-master": "5.x-dev",
       "dev-update": "feature/update"
     }
+  },
+  "scripts": {
+    "tests": "./vendor/bin/phpunit",
+    "tests-without-http-requests": "./vendor/bin/phpunit --exclude-group integration"
   }
 }

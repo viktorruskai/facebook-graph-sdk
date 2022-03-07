@@ -48,6 +48,7 @@ use Facebook\Url\FacebookUrlDetectionHandler;
 use Facebook\Url\UrlDetectionInterface;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
+use JsonException;
 
 /**
  * Class Facebook
@@ -192,7 +193,7 @@ class Facebook
      */
     public function getOAuth2Client(): OAuth2Client
     {
-        if (!$this->oAuth2Client instanceof OAuth2Client) {
+        if (!isset($this->oAuth2Client)) {
             $app = $this->getApp();
             $client = $this->getClient();
             $this->oAuth2Client = new OAuth2Client($app, $client, $this->defaultGraphVersion);
@@ -430,6 +431,7 @@ class Facebook
      *
      * @param AccessToken|string|null $accessToken The top-level access token. Requests with no access token
      *                                               will fallback to this.
+     * @throws FacebookSDKException
      */
     public function newBatchRequest(AccessToken|string|null $accessToken = null, ?string $graphVersion = null): FacebookBatchRequest
     {
@@ -489,9 +491,9 @@ class Facebook
      * Upload a video in chunks.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
-    #[ArrayShape(['video_id' => "int", 'success' => "bool"])]
-    public function uploadVideo(int $target, string $pathToFile, array $metadata = [], AccessToken|string|null $accessToken = null, int $maxTransferTries = 5, ?string $graphVersion = null): array
+    public function uploadVideo(int|string $target, string $pathToFile, array $metadata = [], AccessToken|string|null $accessToken = null, int $maxTransferTries = 5, ?string $graphVersion = null): array
     {
         $accessToken = $accessToken ?: $this->defaultAccessToken;
         $graphVersion = $graphVersion ?: $this->defaultGraphVersion;

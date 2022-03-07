@@ -33,6 +33,7 @@ use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use Facebook\FacebookClient;
 use Facebook\FacebookRequest;
+use JsonException;
 
 /**
  * Class FacebookResumableUploader
@@ -67,6 +68,7 @@ class FacebookResumableUploader
      * Upload by chunks - start phase
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function start(string $endpoint, FacebookFile $file): FacebookTransferChunk
     {
@@ -84,6 +86,7 @@ class FacebookResumableUploader
      *
      * @throws FacebookResponseException
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function transfer(string $endpoint, FacebookTransferChunk $chunk, bool $allowToThrow = false): FacebookTransferChunk
     {
@@ -123,6 +126,7 @@ class FacebookResumableUploader
      * Upload by chunks - finish phase
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function finish(string $endpoint, string $uploadSessionId, array $metadata = []): bool
     {
@@ -139,6 +143,7 @@ class FacebookResumableUploader
      * Helper to make a FacebookRequest and send it.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     private function sendUploadRequest(string $endpoint, array $params = []): array
     {

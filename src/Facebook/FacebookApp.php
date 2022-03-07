@@ -90,13 +90,10 @@ class FacebookApp implements Serializable
 
     /**
      * Unserializes a string as a FacebookApp entity.
-     *
-     * @param string $serialized
      */
-    #[Pure]
-    public function unserialize(string $serialized)
+    public function unserialize(string $data)
     {
-        [$id, $secret] = explode('|', $serialized);
+        [$id, $secret] = explode('|', $data);
 
         $this->__construct($id, $secret);
     }
@@ -109,6 +106,6 @@ class FacebookApp implements Serializable
 
     public function __unserialize(array $data): void
     {
-        $this->unserialize($data);
+        $this->unserialize($data[0] ?? '');
     }
 }

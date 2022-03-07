@@ -65,14 +65,13 @@ class FacebookBatchRequest extends FacebookRequest implements IteratorAggregate,
     /**
      * Adds a new request to the array.
      *
-     * @param array|FacebookRequest $request
      * @param array|string|null $options Array of batch request options e.g. 'name', 'omit_response_on_success'.
      *                                       If a string is given, it is the value of the 'name' option.
      *
      * @throws InvalidArgumentException
      * @throws FacebookSDKException
      */
-    public function add(array|FacebookRequest $request, array|string $options = null): static
+    public function add(array|string|FacebookRequest $request, array|string $options = null): static
     {
         if (is_array($request)) {
             foreach ($request as $key => $req) {
