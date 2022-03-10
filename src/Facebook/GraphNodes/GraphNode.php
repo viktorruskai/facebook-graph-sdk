@@ -65,7 +65,7 @@ class GraphNode extends Collection
         $items = [];
 
         foreach ($data as $k => $v) {
-            if ($this->shouldCastAsDateTime($k)
+            if ($this->shouldCastAsDateTime((string)$k)
                 && (is_numeric($v)
                     || $this->isIso8601DateString($v))
             ) {

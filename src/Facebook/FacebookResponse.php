@@ -81,11 +81,11 @@ class FacebookResponse
      *
      * @throws JsonException
      */
-    public function __construct(FacebookRequest $request, ?string $body = null, ?int $httpStatusCode = null, array $headers = [])
+    public function __construct(FacebookRequest $request, ?string $body = null, int|string|null $httpStatusCode = null, array $headers = [])
     {
         $this->request = $request;
-        $this->body = $body;
-        $this->httpStatusCode = $httpStatusCode;
+        $this->body = !isset($body) || $body === '' ? null : $body;
+        $this->httpStatusCode = isset($httpStatusCode) ? (int)$httpStatusCode : null;
         $this->headers = $headers;
 
         $this->decodeBody();
@@ -220,7 +220,7 @@ class FacebookResponse
      */
     public function decodeBody(): void
     {
-        $decodedBody = json_decode($this->body, true, 512, JSON_THROW_ON_ERROR);
+        $decodedBody = $this->body !== null ? json_decode($this->body, true, 512, JSON_THROW_ON_ERROR) : '';
 
         if ($decodedBody === null) {
             $this->decodedBody = [];
@@ -236,6 +236,8 @@ class FacebookResponse
 
         if (!is_array($decodedBody)) {
             $this->decodedBody = [];
+        } else if (!$this->isError()) {
+            $this->decodedBody = $decodedBody;
         }
 
         if ($this->isError()) {

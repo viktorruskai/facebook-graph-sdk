@@ -95,6 +95,7 @@ class GraphNodeFactoryTest extends TestCase
 
         $factory = new GraphNodeFactory($res);
         $factory->validateResponseCastableAsGraphEdge();
+        $this->assertTrue(true);
     }
 
     /**

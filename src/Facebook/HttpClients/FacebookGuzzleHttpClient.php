@@ -28,8 +28,10 @@ use Facebook\Exceptions\FacebookSDKException;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Ring\Exception\RingException;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 class FacebookGuzzleHttpClient implements FacebookHttpClientInterface
 {
@@ -79,12 +81,8 @@ class FacebookGuzzleHttpClient implements FacebookHttpClientInterface
 
     /**
      * Returns the Guzzle array of headers as a string.
-     *
-     * @param ResponseInterface $response The Guzzle response.
-     *
-     * @return string
      */
-    public function getHeadersAsString(ResponseInterface $response)
+    public function getHeadersAsString(PsrResponseInterface $response): string
     {
         $headers = $response->getHeaders();
         $rawHeaders = [];

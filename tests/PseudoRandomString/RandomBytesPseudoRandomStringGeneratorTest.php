@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,14 +23,19 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\PseudoRandomString;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\PseudoRandomString\RandomBytesPseudoRandomStringGenerator;
 use PHPUnit\Framework\TestCase;
 
 class RandomBytesPseudoRandomStringGeneratorTest extends TestCase
 {
-    public function testCanGenerateRandomStringOfArbitraryLength()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCanGenerateRandomStringOfArbitraryLength(): void
     {
         if (!function_exists('random_bytes')) {
             $this->markTestSkipped(

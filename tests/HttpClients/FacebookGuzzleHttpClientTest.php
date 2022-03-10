@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,44 +23,48 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\HttpClients;
 
-use Mockery as m;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Http\GraphRawResponse;
 use Facebook\HttpClients\FacebookGuzzleHttpClient;
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Mockery as m;
 
 class FacebookGuzzleHttpClientTest extends AbstractTestHttpClient
 {
-    /**
-     * @var \GuzzleHttp\Client
-     */
-    protected $guzzleMock;
-
-    /**
-     * @var FacebookGuzzleHttpClient
-     */
-    protected $guzzleClient;
+    protected Client $guzzleMock;
+    protected FacebookGuzzleHttpClient $guzzleClient;
 
     protected function setUp(): void
     {
-        $this->guzzleMock = m::mock('GuzzleHttp\Client');
+        $this->guzzleMock = m::mock(Client::class);
         $this->guzzleClient = new FacebookGuzzleHttpClient($this->guzzleMock);
     }
 
-    public function testCanSendNormalRequest()
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        m::close();
+    }
+
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCanSendNormalRequest(): void
     {
         $request = new Request('GET', 'http://foo.com');
 
-        $body = Stream::factory($this->fakeRawBody);
-        $response = new Response(200, $this->fakeHeadersAsArray, $body);
+        $response = new Response(200, $this->fakeHeadersAsArray, $this->fakeRawBody);
 
         $this->guzzleMock
             ->shouldReceive('createRequest')
             ->once()
-            ->with('GET', 'http://foo.com/', m::on(function ($arg) {
+            ->with('GET', 'http://foo.com/', m::on(static function ($arg) {
 
                 // array_diff_assoc() will sometimes trigger error on child-arrays
                 if (['X-foo' => 'bar'] !== $arg['headers']) {
@@ -91,23 +97,21 @@ class FacebookGuzzleHttpClientTest extends AbstractTestHttpClient
 
         $response = $this->guzzleClient->send('http://foo.com/', 'GET', 'foo_body', ['X-foo' => 'bar'], 123);
 
-        $this->assertInstanceOf('Facebook\Http\GraphRawResponse', $response);
+        $this->assertInstanceOf(GraphRawResponse::class, $response);
         $this->assertEquals($this->fakeRawBody, $response->getBody());
         $this->assertEquals($this->fakeHeadersAsArray, $response->getHeaders());
         $this->assertEquals(200, $response->getHttpResponseCode());
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testThrowsExceptionOnClientError()
+    public function testThrowsExceptionOnClientError(): void
     {
+        $this->expectException(FacebookSDKException::class);
         $request = new Request('GET', 'http://foo.com');
 
         $this->guzzleMock
             ->shouldReceive('createRequest')
             ->once()
-            ->with('GET', 'http://foo.com/', m::on(function ($arg) {
+            ->with('GET', 'http://foo.com/', m::on(static function ($arg) {
 
                 // array_diff_assoc() will sometimes trigger error on child-arrays
                 if ([] !== $arg['headers']) {

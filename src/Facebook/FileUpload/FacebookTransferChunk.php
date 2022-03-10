@@ -41,26 +41,26 @@ class FacebookTransferChunk
     private FacebookFile $file;
 
     /**
-     * @var int The ID of the upload session.
+     * @var int|string The ID of the upload session.
      */
-    private int $uploadSessionId;
+    private int|string $uploadSessionId;
 
     /**
-     * @var int Start byte position of the next file chunk.
+     * @var int|string Start byte position of the next file chunk.
      */
-    private int $startOffset;
+    private int|string $startOffset;
 
     /**
-     * @var int End byte position of the next file chunk.
+     * @var int|string End byte position of the next file chunk.
      */
-    private int $endOffset;
+    private int|string $endOffset;
 
     /**
-     * @var int The ID of the video.
+     * @var int|string The ID of the video.
      */
-    private int $videoId;
+    private int|string $videoId;
 
-    public function __construct(FacebookFile $file, int $uploadSessionId, int $videoId, int $startOffset, int $endOffset)
+    public function __construct(FacebookFile $file, int|string $uploadSessionId, int|string $videoId, int|string $startOffset, int|string $endOffset)
     {
         $this->file = $file;
         $this->uploadSessionId = $uploadSessionId;
@@ -105,12 +105,12 @@ class FacebookTransferChunk
         return $this->startOffset === $this->endOffset;
     }
 
-    public function getStartOffset(): int
+    public function getStartOffset(): int|string
     {
         return $this->startOffset;
     }
 
-    public function getEndOffset(): int
+    public function getEndOffset(): int|string
     {
         return $this->endOffset;
     }
@@ -118,7 +118,7 @@ class FacebookTransferChunk
     /**
      * Get uploaded video Id
      */
-    public function getVideoId(): int
+    public function getVideoId(): int|string
     {
         return $this->videoId;
     }

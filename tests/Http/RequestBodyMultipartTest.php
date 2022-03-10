@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,15 +23,17 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Http;
 
-use Facebook\Http\RequestBodyMultipart;
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FileUpload\FacebookFile;
+use Facebook\Http\RequestBodyMultipart;
 use PHPUnit\Framework\TestCase;
 
 class RequestBodyMultipartTest extends TestCase
 {
-    public function testCanProperlyEncodeAnArrayOfParams()
+    public function testCanProperlyEncodeAnArrayOfParams(): void
     {
         $message = new RequestBodyMultipart([
             'foo' => 'bar',
@@ -46,7 +50,10 @@ class RequestBodyMultipartTest extends TestCase
         $this->assertEquals($expectedBody, $body);
     }
 
-    public function testCanProperlyEncodeFilesAndParams()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCanProperlyEncodeFilesAndParams(): void
     {
         $file = new FacebookFile(__DIR__ . '/../foo.txt');
         $message = new RequestBodyMultipart([
@@ -66,24 +73,24 @@ class RequestBodyMultipartTest extends TestCase
         $this->assertEquals($expectedBody, $body);
     }
 
-    public function testSupportsMultidimensionalParams()
+    public function testSupportsMultidimensionalParams(): void
     {
         $message = new RequestBodyMultipart([
-          'foo' => 'bar',
-          'faz' => [1,2,3],
-          'targeting' => [
-            'countries' => 'US,GB',
-            'age_min' => 13,
-          ],
-          'call_to_action' => [
-            'type' => 'LEARN_MORE',
-            'value' => [
-              'link' => 'http://example.com',
-              'sponsorship' => [
-                'image' => 'http://example.com/bar.jpg',
-              ],
+            'foo' => 'bar',
+            'faz' => [1, 2, 3],
+            'targeting' => [
+                'countries' => 'US,GB',
+                'age_min' => 13,
             ],
-          ],
+            'call_to_action' => [
+                'type' => 'LEARN_MORE',
+                'value' => [
+                    'link' => 'http://example.com',
+                    'sponsorship' => [
+                        'image' => 'http://example.com/bar.jpg',
+                    ],
+                ],
+            ],
         ], [], 'foo_boundary');
         $body = $message->getBody();
 

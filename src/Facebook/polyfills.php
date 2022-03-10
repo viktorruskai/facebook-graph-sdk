@@ -26,7 +26,7 @@
  * @see https://github.com/sarciszewski/php-future/blob/master/src/Security.php#L37-L51
  */
 if (!function_exists('hash_equals')) {
-    function hash_equals($knownString, $userString)
+    function hash_equals($knownString, $userString): bool
     {
         if (function_exists('mb_strlen')) {
             $kLen = mb_strlen($knownString, '8bit');

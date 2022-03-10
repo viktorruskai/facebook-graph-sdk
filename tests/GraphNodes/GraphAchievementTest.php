@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,12 +23,22 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
+
+use DateTime;
+use Exception;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\GraphNodes\GraphApplication;
+use Facebook\GraphNodes\GraphUser;
 
 class GraphAchievementTest extends AbstractGraphNode
 {
 
-    public function testIdIsString()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testIdIsString(): void
     {
         $dataFromGraph = [
             'id' => '1337'
@@ -40,7 +52,10 @@ class GraphAchievementTest extends AbstractGraphNode
         $this->assertEquals($dataFromGraph['id'], $id);
     }
 
-    public function testTypeIsAlwaysString()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testTypeIsAlwaysString(): void
     {
         $dataFromGraph = [
             'id' => '1337'
@@ -54,10 +69,14 @@ class GraphAchievementTest extends AbstractGraphNode
         $this->assertEquals('game.achievement', $type);
     }
 
-    public function testNoFeedStoryIsBoolean()
+    /**
+     * @throws FacebookSDKException
+     * @throws Exception
+     */
+    public function testNoFeedStoryIsBoolean(): void
     {
         $dataFromGraph = [
-            'no_feed_story' => (rand(0, 1) == 1)
+            'no_feed_story' => (random_int(0, 1) === 1)
         ];
 
         $factory = $this->makeFactoryWithData($dataFromGraph);
@@ -65,10 +84,13 @@ class GraphAchievementTest extends AbstractGraphNode
 
         $isNoFeedStory = $graphNode->isNoFeedStory();
 
-        $this->assertTrue(is_bool($isNoFeedStory));
+        $this->assertIsBool($isNoFeedStory);
     }
 
-    public function testDatesGetCastToDateTime()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testDatesGetCastToDateTime(): void
     {
         $dataFromGraph = [
             'publish_time' => '2014-07-15T03:54:34+0000'
@@ -79,10 +101,13 @@ class GraphAchievementTest extends AbstractGraphNode
 
         $publishTime = $graphNode->getPublishTime();
 
-        $this->assertInstanceOf('DateTime', $publishTime);
+        $this->assertInstanceOf(DateTime::class, $publishTime);
     }
 
-    public function testFromGetsCastAsGraphUser()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testFromGetsCastAsGraphUser(): void
     {
         $dataFromGraph = [
             'from' => [
@@ -96,10 +121,13 @@ class GraphAchievementTest extends AbstractGraphNode
 
         $from = $graphNode->getFrom();
 
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphUser', $from);
+        $this->assertInstanceOf(GraphUser::class, $from);
     }
 
-    public function testApplicationGetsCastAsGraphApplication()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testApplicationGetsCastAsGraphApplication(): void
     {
         $dataFromGraph = [
             'application' => [
@@ -112,6 +140,6 @@ class GraphAchievementTest extends AbstractGraphNode
 
         $app = $graphNode->getApplication();
 
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphApplication', $app);
+        $this->assertInstanceOf(GraphApplication::class, $app);
     }
 }

@@ -26,10 +26,8 @@ declare(strict_types=1);
 
 namespace Facebook\Tests;
 
-use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use PHPUnit\Framework\TestCase;
-use Facebook\Authentication\AccessToken;
 
 class FacebookAppTest extends TestCase
 {

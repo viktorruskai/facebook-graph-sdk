@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,14 +23,19 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\PseudoRandomString;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\PseudoRandomString\UrandomPseudoRandomStringGenerator;
 use PHPUnit\Framework\TestCase;
 
 class UrandomPseudoRandomStringGeneratorTest extends TestCase
 {
-    public function testCanGenerateRandomStringOfArbitraryLength()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCanGenerateRandomStringOfArbitraryLength(): void
     {
         if (ini_get('open_basedir')) {
             $this->markTestSkipped(

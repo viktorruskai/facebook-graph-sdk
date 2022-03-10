@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,14 +23,19 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
+use DateTime;
+use DateTimeInterface;
+use Exception;
 use Facebook\GraphNodes\GraphNode;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 
 class GraphNodeTest extends TestCase
 {
-    public function testAnEmptyBaseGraphNodeCanInstantiate()
+    public function testAnEmptyBaseGraphNodeCanInstantiate(): void
     {
         $graphNode = new GraphNode();
         $backingData = $graphNode->asArray();
@@ -36,7 +43,7 @@ class GraphNodeTest extends TestCase
         $this->assertEquals([], $backingData);
     }
 
-    public function testAGraphNodeCanInstantiateWithData()
+    public function testAGraphNodeCanInstantiateWithData(): void
     {
         $graphNode = new GraphNode(['foo' => 'bar']);
         $backingData = $graphNode->asArray();
@@ -44,7 +51,7 @@ class GraphNodeTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $backingData);
     }
 
-    public function testDatesThatShouldBeCastAsDateTimeObjectsAreDetected()
+    public function testDatesThatShouldBeCastAsDateTimeObjectsAreDetected(): void
     {
         $graphNode = new GraphNode();
 
@@ -69,38 +76,42 @@ class GraphNodeTest extends TestCase
         $this->assertFalse($shouldFail, 'Expected the invalid ISO 8601 format to fail.');
     }
 
-    public function testATimeStampCanBeConvertedToADateTimeObject()
+    /**
+     * @throws Exception
+     */
+    public function testATimeStampCanBeConvertedToADateTimeObject(): void
     {
         $someTimeStampFromGraph = 1405547020;
         $graphNode = new GraphNode();
         $dateTime = $graphNode->castToDateTime($someTimeStampFromGraph);
-        $prettyDate = $dateTime->format(\DateTime::RFC1036);
+        $prettyDate = $dateTime->format(DateTimeInterface::RFC1036);
         $timeStamp = $dateTime->getTimestamp();
 
-        $this->assertInstanceOf('DateTime', $dateTime);
         $this->assertEquals('Wed, 16 Jul 14 23:43:40 +0200', $prettyDate);
         $this->assertEquals(1405547020, $timeStamp);
     }
 
-    public function testAGraphDateStringCanBeConvertedToADateTimeObject()
+    /**
+     * @throws Exception
+     */
+    public function testAGraphDateStringCanBeConvertedToADateTimeObject(): void
     {
         $someDateStringFromGraph = '2014-07-15T03:44:53+0000';
         $graphNode = new GraphNode();
         $dateTime = $graphNode->castToDateTime($someDateStringFromGraph);
-        $prettyDate = $dateTime->format(\DateTime::RFC1036);
+        $prettyDate = $dateTime->format(DateTimeInterface::RFC1036);
         $timeStamp = $dateTime->getTimestamp();
 
-        $this->assertInstanceOf('DateTime', $dateTime);
         $this->assertEquals('Tue, 15 Jul 14 03:44:53 +0000', $prettyDate);
         $this->assertEquals(1405395893, $timeStamp);
     }
 
-    public function testUncastingAGraphNodeWillUncastTheDateTimeObject()
+    public function testUncastingAGraphNodeWillUncastTheDateTimeObject(): void
     {
         $collectionOne = new GraphNode(['foo', 'bar']);
         $collectionTwo = new GraphNode([
             'id' => '123',
-            'date' => new \DateTime('2014-07-15T03:44:53+0000'),
+            'date' => new DateTime('2014-07-15T03:44:53+00:00'),
             'some_collection' => $collectionOne,
         ]);
 
@@ -108,16 +119,16 @@ class GraphNodeTest extends TestCase
 
         $this->assertEquals([
             'id' => '123',
-            'date' => '2014-07-15T03:44:53+0000',
+            'date' => '2014-07-15T03:44:53+00:00',
             'some_collection' => ['foo', 'bar'],
         ], $uncastArray);
     }
 
-    public function testGettingGraphNodeAsAnArrayWillNotUncastTheDateTimeObject()
+    public function testGettingGraphNodeAsAnArrayWillNotUncastTheDateTimeObject(): void
     {
         $collection = new GraphNode([
             'id' => '123',
-            'date' => new \DateTime('2014-07-15T03:44:53+0000'),
+            'date' => new DateTime('2014-07-15T03:44:53+0000'),
         ]);
 
         $collectionAsArray = $collection->asArray();
@@ -125,15 +136,18 @@ class GraphNodeTest extends TestCase
         $this->assertInstanceOf('DateTime', $collectionAsArray['date']);
     }
 
-    public function testReturningACollectionAsJasonWillSafelyRepresentDateTimes()
+    /**
+     * @throws JsonException
+     */
+    public function testReturningACollectionAsJasonWillSafelyRepresentDateTimes(): void
     {
         $collection = new GraphNode([
             'id' => '123',
-            'date' => new \DateTime('2014-07-15T03:44:53+0000'),
+            'date' => new DateTime('2014-07-15T03:44:53+00:00'),
         ]);
 
         $collectionAsString = $collection->asJson();
 
-        $this->assertEquals('{"id":"123","date":"2014-07-15T03:44:53+0000"}', $collectionAsString);
+        $this->assertEquals('{"id":"123","date":"2014-07-15T03:44:53+00:00"}', $collectionAsString);
     }
 }

@@ -198,7 +198,9 @@ class FacebookRequest
      */
     public function setMethod(?string $method): void
     {
-        $this->method = strtoupper($method);
+        if (isset($method)) {
+            $this->method = strtoupper($method);
+        }
     }
 
     /**
@@ -216,7 +218,7 @@ class FacebookRequest
      */
     public function validateMethod(): void
     {
-        if (!$this->method) {
+        if (!isset($this->method)) {
             throw new FacebookSDKException('HTTP method not specified.');
         }
 
@@ -230,8 +232,12 @@ class FacebookRequest
      *
      * @throws FacebookSDKException
      */
-    public function setEndpoint(string $endpoint): static
+    public function setEndpoint(?string $endpoint): static
     {
+        if (!isset($endpoint)) {
+            return $this;
+        }
+
         // Harvest the access token from the endpoint to keep things in sync
         $params = FacebookUrlManipulator::getParamsAsArray($endpoint);
         if (isset($params['access_token'])) {

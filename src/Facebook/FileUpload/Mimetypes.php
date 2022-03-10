@@ -955,7 +955,7 @@ class Mimetypes
      */
     public static function getInstance(): Mimetypes
     {
-        if (!self::$instance) {
+        if (!isset(self::$instance)) {
             self::$instance = new self();
         }
 

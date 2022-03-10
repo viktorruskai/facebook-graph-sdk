@@ -59,11 +59,11 @@ class FacebookFile
      *
      * @throws FacebookSDKException
      */
-    public function __construct(string $filePath, int $maxLength = -1, int $offset = -1)
+    public function __construct(string $filePath, int $maxLength = -1, int|string $offset = -1)
     {
         $this->path = $filePath;
         $this->maxLength = $maxLength;
-        $this->offset = $offset;
+        $this->offset = (int)$offset;
         $this->open();
     }
 

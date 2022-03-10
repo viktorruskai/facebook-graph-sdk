@@ -71,7 +71,7 @@ class FacebookBatchRequest extends FacebookRequest implements IteratorAggregate,
      * @throws InvalidArgumentException
      * @throws FacebookSDKException
      */
-    public function add(array|string|FacebookRequest $request, array|string $options = null): static
+    public function add(array|string|FacebookRequest $request, mixed $options = null): static
     {
         if (is_array($request)) {
             foreach ($request as $key => $req) {
@@ -190,6 +190,7 @@ class FacebookBatchRequest extends FacebookRequest implements IteratorAggregate,
      * Converts the requests into a JSON(P) string.
      *
      * @throws JsonException
+     * @throws FacebookSDKException
      */
     public function convertRequestsToJson(): string
     {

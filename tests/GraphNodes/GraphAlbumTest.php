@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,26 +23,30 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
-use Mockery as m;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\FacebookResponse;
 use Facebook\GraphNodes\GraphNodeFactory;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Facebook\GraphNodes\GraphUser;
+use Facebook\GraphNodes\GraphPage;
 
 class GraphAlbumTest extends TestCase
 {
-
-    /**
-     * @var \Facebook\FacebookResponse
-     */
-    protected $responseMock;
+    protected FacebookResponse $responseMock;
 
     protected function setUp(): void
     {
-        $this->responseMock = m::mock('\\Facebook\\FacebookResponse');
+        $this->responseMock = m::mock(FacebookResponse::class);
     }
 
-    public function testDatesGetCastToDateTime()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testDatesGetCastToDateTime(): void
     {
         $dataFromGraph = [
             'created_time' => '2014-07-15T03:54:34+0000',
@@ -61,9 +67,13 @@ class GraphAlbumTest extends TestCase
 
         $this->assertInstanceOf('DateTime', $createdTime);
         $this->assertInstanceOf('DateTime', $updatedTime);
+        m::close();
     }
 
-    public function testFromGetsCastAsGraphUser()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testFromGetsCastAsGraphUser(): void
     {
         $dataFromGraph = [
             'id' => '123',
@@ -82,10 +92,14 @@ class GraphAlbumTest extends TestCase
 
         $from = $graphNode->getFrom();
 
-        $this->assertInstanceOf('\\Facebook\\GraphNodes\\GraphUser', $from);
+        $this->assertInstanceOf(GraphUser::class, $from);
+        m::close();
     }
 
-    public function testPlacePropertyWillGetCastAsGraphPageObject()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testPlacePropertyWillGetCastAsGraphPageObject(): void
     {
         $dataFromGraph = [
             'id' => '123',
@@ -105,6 +119,7 @@ class GraphAlbumTest extends TestCase
 
         $place = $graphNode->getPlace();
 
-        $this->assertInstanceOf('\\Facebook\\GraphNodes\\GraphPage', $place);
+        $this->assertInstanceOf(GraphPage::class, $place);
+        m::close();
     }
 }

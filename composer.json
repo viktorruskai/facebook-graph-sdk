@@ -26,7 +26,8 @@
     "phpunit/phpunit": "~9.0",
     "mockery/mockery": "~1.5",
     "guzzlehttp/guzzle": "~7.0",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-4": {

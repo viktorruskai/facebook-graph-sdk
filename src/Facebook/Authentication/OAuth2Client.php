@@ -163,7 +163,7 @@ class OAuth2Client
      *
      * @throws FacebookSDKException
      */
-    public function getCodeFromLongLivedAccessToken(string|AccessToken $accessToken, string $redirectUri = ''): AccessToken
+    public function getCodeFromLongLivedAccessToken(string|AccessToken $accessToken, string $redirectUri = ''): AccessToken|string
     {
         $params = [
             'redirect_uri' => $redirectUri,

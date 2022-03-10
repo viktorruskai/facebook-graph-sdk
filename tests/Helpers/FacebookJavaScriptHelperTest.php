@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,18 +23,25 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Helpers;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use Facebook\FacebookClient;
 use Facebook\Helpers\FacebookJavaScriptHelper;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 
 class FacebookJavaScriptHelperTest extends TestCase
 {
-    public $rawSignedRequestAuthorized = 'vdZXlVEQ5NTRRTFvJ7Jeo_kP4SKnBDvbNP0fEYKS0Sg=.eyJvYXV0aF90b2tlbiI6ImZvb190b2tlbiIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNDAyNTUxMDMxLCJ1c2VyX2lkIjoiMTIzIn0=';
+    public string $rawSignedRequestAuthorized = 'vdZXlVEQ5NTRRTFvJ7Jeo_kP4SKnBDvbNP0fEYKS0Sg=.eyJvYXV0aF90b2tlbiI6ImZvb190b2tlbiIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNDAyNTUxMDMxLCJ1c2VyX2lkIjoiMTIzIn0=';
 
-    public function testARawSignedRequestCanBeRetrievedFromCookieData()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testARawSignedRequestCanBeRetrievedFromCookieData(): void
     {
         $_COOKIE['fbsr_123'] = $this->rawSignedRequestAuthorized;
 

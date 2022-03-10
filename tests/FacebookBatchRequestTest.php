@@ -225,6 +225,7 @@ class FacebookBatchRequestTest extends TestCase
         $this->createAndAppendRequestsTo($batchRequest, 50);
 
         $batchRequest->validateBatchRequestCount();
+        $this->assertTrue(true);
     }
 
     /**

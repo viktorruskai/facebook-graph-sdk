@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,30 +23,33 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\HttpClients;
 
-use Mockery as m;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Http\GraphRawResponse;
+use Facebook\HttpClients\FacebookStream;
 use Facebook\HttpClients\FacebookStreamHttpClient;
+use Mockery as m;
 
 class FacebookStreamHttpClientTest extends AbstractTestHttpClient
 {
-    /**
-     * @var \Facebook\HttpClients\FacebookStream
-     */
-    protected $streamMock;
-
-    /**
-     * @var FacebookStreamHttpClient
-     */
-    protected $streamClient;
+    protected FacebookStream $streamMock;
+    protected FacebookStreamHttpClient $streamClient;
 
     protected function setUp(): void
     {
-        $this->streamMock = m::mock('Facebook\HttpClients\FacebookStream');
+        $this->streamMock = m::mock(FacebookStream::class);
         $this->streamClient = new FacebookStreamHttpClient($this->streamMock);
     }
 
-    public function testCanCompileHeader()
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        m::close();
+    }
+
+    public function testCanCompileHeader(): void
     {
         $headers = [
             'X-foo' => 'bar',
@@ -54,13 +59,16 @@ class FacebookStreamHttpClientTest extends AbstractTestHttpClient
         $this->assertEquals("X-foo: bar\r\nX-bar: faz", $header);
     }
 
-    public function testCanSendNormalRequest()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCanSendNormalRequest(): void
     {
         $this->streamMock
             ->shouldReceive('streamContextCreate')
             ->once()
-            ->with(m::on(function ($arg) {
-                if (!isset($arg['http']) || !isset($arg['ssl'])) {
+            ->with(m::on(static function ($arg) {
+                if (!isset($arg['http'], $arg['ssl'])) {
                     return false;
                 }
 
@@ -104,17 +112,16 @@ class FacebookStreamHttpClientTest extends AbstractTestHttpClient
 
         $response = $this->streamClient->send('http://foo.com/', 'GET', 'foo_body', ['X-foo' => 'bar'], 123);
 
-        $this->assertInstanceOf('Facebook\Http\GraphRawResponse', $response);
+        $this->assertInstanceOf(GraphRawResponse::class, $response);
         $this->assertEquals($this->fakeRawBody, $response->getBody());
         $this->assertEquals($this->fakeHeadersAsArray, $response->getHeaders());
         $this->assertEquals(200, $response->getHttpResponseCode());
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testThrowsExceptionOnClientError()
+    public function testThrowsExceptionOnClientError(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $this->streamMock
             ->shouldReceive('streamContextCreate')
             ->once()

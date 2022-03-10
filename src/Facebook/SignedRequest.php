@@ -103,7 +103,7 @@ class SignedRequest
     /**
      * Returns user_id from signed request data if available.
      */
-    public function getUserId(): ?string
+    public function getUserId(): string|int|null
     {
         return $this->get('user_id');
     }
