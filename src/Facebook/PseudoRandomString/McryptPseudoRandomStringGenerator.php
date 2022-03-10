@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\PseudoRandomString;
 
 use Facebook\Exceptions\FacebookSDKException;
@@ -32,7 +35,7 @@ class McryptPseudoRandomStringGenerator implements PseudoRandomStringGeneratorIn
     /**
      * @const string The error message when generating the string fails.
      */
-    const ERROR_MESSAGE = 'Unable to generate a cryptographically secure pseudo-random string from mcrypt_create_iv(). ';
+    public const ERROR_MESSAGE = 'Unable to generate a cryptographically secure pseudo-random string from mcrypt_create_iv(). ';
 
     /**
      * @throws FacebookSDKException
@@ -50,7 +53,7 @@ class McryptPseudoRandomStringGenerator implements PseudoRandomStringGeneratorIn
     /**
      * @inheritdoc
      */
-    public function getPseudoRandomString($length)
+    public function getPseudoRandomString(int $length): string
     {
         $this->validateLength($length);
 

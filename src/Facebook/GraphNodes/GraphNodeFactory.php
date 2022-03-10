@@ -330,8 +330,9 @@ class GraphNodeFactory
             return true;
         }
 
+        /** @noinspection ArrayIsListCanBeUsedInspection */
         // Checks for a sequential numeric array which would be a GraphEdge
-        return array_is_list($data);
+        return function_exists('array_is_list') ? array_is_list($data) : array_keys($data) === range(0, count($data) - 1);
     }
 
     /**

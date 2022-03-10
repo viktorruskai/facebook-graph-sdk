@@ -30,7 +30,7 @@ use Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface;
 
 class FooBarPseudoRandomStringGenerator implements PseudoRandomStringGeneratorInterface
 {
-    public function getPseudoRandomString($length): string
+    public function getPseudoRandomString(int $length): string
     {
         return 'csprs123';
     }

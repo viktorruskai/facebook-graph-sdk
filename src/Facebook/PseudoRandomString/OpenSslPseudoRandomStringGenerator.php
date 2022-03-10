@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\PseudoRandomString;
 
 use Facebook\Exceptions\FacebookSDKException;
@@ -32,7 +35,7 @@ class OpenSslPseudoRandomStringGenerator implements PseudoRandomStringGeneratorI
     /**
      * @const string The error message when generating the string fails.
      */
-    const ERROR_MESSAGE = 'Unable to generate a cryptographically secure pseudo-random string from openssl_random_pseudo_bytes().';
+    public const ERROR_MESSAGE = 'Unable to generate a cryptographically secure pseudo-random string from openssl_random_pseudo_bytes().';
 
     /**
      * @throws FacebookSDKException
@@ -47,16 +50,18 @@ class OpenSslPseudoRandomStringGenerator implements PseudoRandomStringGeneratorI
     /**
      * @inheritdoc
      */
-    public function getPseudoRandomString($length)
+    public function getPseudoRandomString(int $length): string
     {
         $this->validateLength($length);
 
         $wasCryptographicallyStrong = false;
+
+        /** @noinspection PhpComposerExtensionStubsInspection */
         $binaryString = openssl_random_pseudo_bytes($length, $wasCryptographicallyStrong);
 
-        if ($binaryString === false) {
-            throw new FacebookSDKException(static::ERROR_MESSAGE . 'openssl_random_pseudo_bytes() returned an unknown error.');
-        }
+//        if ($binaryString === false) {
+//            throw new FacebookSDKException(static::ERROR_MESSAGE . 'openssl_random_pseudo_bytes() returned an unknown error.');
+//        }
 
         if ($wasCryptographicallyStrong !== true) {
             throw new FacebookSDKException(static::ERROR_MESSAGE . 'openssl_random_pseudo_bytes() returned a pseudo-random string but it was not cryptographically secure and cannot be used.');

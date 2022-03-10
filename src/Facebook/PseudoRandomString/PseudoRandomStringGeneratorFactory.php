@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\PseudoRandomString;
 
 use Facebook\Exceptions\FacebookSDKException;
@@ -36,13 +39,9 @@ class PseudoRandomStringGeneratorFactory
     /**
      * Pseudo random string generator creation.
      *
-     * @param PseudoRandomStringGeneratorInterface|string|null $generator
-     *
-     * @throws InvalidArgumentException If the pseudo random string generator must be set to "random_bytes", "mcrypt", "openssl", or "urandom", or be an instance of Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface.
-     *
-     * @return PseudoRandomStringGeneratorInterface
+     * @throws FacebookSDKException If the pseudo random string generator must be set to "random_bytes", "mcrypt", "openssl", or "urandom", or be an instance of Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface.
      */
-    public static function createPseudoRandomStringGenerator($generator)
+    public static function createPseudoRandomStringGenerator(PseudoRandomStringGeneratorInterface|string|null $generator): PseudoRandomStringGeneratorInterface
     {
         if (!$generator) {
             return self::detectDefaultPseudoRandomStringGenerator();
@@ -73,9 +72,8 @@ class PseudoRandomStringGeneratorFactory
      *
      * @throws FacebookSDKException If unable to detect a cryptographically secure pseudo-random string generator.
      *
-     * @return PseudoRandomStringGeneratorInterface
      */
-    private static function detectDefaultPseudoRandomStringGenerator()
+    private static function detectDefaultPseudoRandomStringGenerator(): PseudoRandomStringGeneratorInterface
     {
         // Check for PHP 7's CSPRNG first to keep mcrypt deprecation messages from appearing in PHP 7.1.
         if (function_exists('random_bytes')) {
