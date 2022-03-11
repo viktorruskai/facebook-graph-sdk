@@ -30,6 +30,7 @@ use Facebook\Authentication\OAuth2Client;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use Facebook\FacebookApp;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 
 class OAuth2ClientTest extends TestCase
@@ -59,6 +60,7 @@ class OAuth2ClientTest extends TestCase
 
     /**
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function testCanGetMetadataFromAnAccessToken(): void
     {
@@ -106,6 +108,7 @@ class OAuth2ClientTest extends TestCase
 
     /**
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function testCanGetAccessTokenFromCode(): void
     {
@@ -133,6 +136,7 @@ class OAuth2ClientTest extends TestCase
 
     /**
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function testCanGetLongLivedAccessToken(): void
     {
@@ -157,6 +161,7 @@ class OAuth2ClientTest extends TestCase
 
     /**
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function testCanGetCodeFromLongLivedAccessToken(): void
     {

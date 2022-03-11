@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Facebook\Tests\GraphNodes;
 
+use Exception;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use Facebook\FacebookRequest;
@@ -107,6 +108,9 @@ class GraphEdgeTest extends TestCase
         $this->assertEquals('/v1337/998899/photos?access_token=foo_token&appsecret_proof=857d5f035a894f16b4180f19966e055cdeab92d4d53017b13dccd6d43b6497af&before=foo_before_cursor&foo=bar&limit=25&pretty=0', $prevPage->getUrl());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCanMapOverNodes(): void
     {
         $graphEdge = new GraphEdge(

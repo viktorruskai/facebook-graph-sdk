@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace Facebook\Tests\GraphNodes;
 
 use Facebook\GraphNodes\Collection;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
@@ -97,6 +98,9 @@ class CollectionTest extends TestCase
         $this->assertEquals(['foo', 'bar'], $collection->asArray());
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testACollectionCanBeConvertedToProperJson(): void
     {
         $collection = new Collection(['foo', 'bar', 123]);

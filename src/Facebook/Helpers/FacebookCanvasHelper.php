@@ -34,6 +34,8 @@ class FacebookCanvasHelper extends FacebookSignedRequestFromInputHelper
 {
     /**
      * Returns the app data value.
+     *
+     * @noinspection PhpUnused
      */
     public function getAppData()
     {

@@ -29,14 +29,17 @@ namespace Facebook\Tests\PseudoRandomString;
 use Facebook\Tests\Fixtures\MyFooBarPseudoRandomStringGenerator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class PseudoRandomStringGeneratorTraitTest extends TestCase
 {
     public function testAnInvalidLengthWillThrow(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
 
         $prsg = new MyFooBarPseudoRandomStringGenerator();
+
+        /** @noinspection PhpStrictTypeCheckingInspection */
         $prsg->validateLength('foo_len');
     }
 

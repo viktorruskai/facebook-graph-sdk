@@ -49,7 +49,6 @@ class HttpClientsFactoryTest extends TestCase
         $httpClient = HttpClientsFactory::createHttpClient($handler);
 
         $this->assertInstanceOf(self::COMMON_INTERFACE, $httpClient);
-        $this->assertInstanceOf($expected, $httpClient);
     }
 
     public function httpClientsProvider(): array

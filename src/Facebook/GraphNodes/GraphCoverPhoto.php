@@ -43,6 +43,8 @@ class GraphCoverPhoto extends GraphNode
 
     /**
      * Returns the source of cover if it exists
+     *
+     * @noinspection PhpUnused
      */
     public function getSource(): ?string
     {
@@ -51,6 +53,8 @@ class GraphCoverPhoto extends GraphNode
 
     /**
      * Returns the offset_x of cover if it exists
+     *
+     * @noinspection PhpUnused
      */
     public function getOffsetX(): ?int
     {
@@ -59,6 +63,8 @@ class GraphCoverPhoto extends GraphNode
 
     /**
      * Returns the offset_y of cover if it exists
+     *
+     * @noinspection PhpUnused
      */
     public function getOffsetY(): ?int
     {

@@ -53,7 +53,7 @@ class FakeGraphApiForResumableUpload implements FacebookHttpClientInterface
     /**
      * @throws JsonException
      */
-    public function send($url, $method, $body, array $headers, $timeOut): GraphRawResponse
+    public function send(string $url, string $method, string $body, array $headers, int $timeOut): GraphRawResponse
     {
         // Could be start, transfer or finish
         if (str_contains($body, 'transfer')) {

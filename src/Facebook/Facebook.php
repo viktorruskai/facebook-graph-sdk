@@ -47,7 +47,6 @@ use Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface;
 use Facebook\Url\FacebookUrlDetectionHandler;
 use Facebook\Url\UrlDetectionInterface;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\ArrayShape;
 use JsonException;
 
 /**
@@ -258,6 +257,8 @@ class Facebook
 
     /**
      * Returns the default Graph version.
+     *
+     * @noinspection PhpUnused
      */
     public function getDefaultGraphVersion(): ?string
     {
@@ -266,6 +267,8 @@ class Facebook
 
     /**
      * Returns the redirect login helper.
+     *
+     * @throws FacebookSDKException
      */
     public function getRedirectLoginHelper(): FacebookRedirectLoginHelper
     {
@@ -279,6 +282,11 @@ class Facebook
 
     /**
      * Returns the JavaScript helper.
+     *
+     * @throws FacebookSDKException
+     * @throws JsonException
+     *
+     * @noinspection PhpUnused
      */
     public function getJavaScriptHelper(): FacebookJavaScriptHelper
     {
@@ -287,6 +295,11 @@ class Facebook
 
     /**
      * Returns the canvas helper.
+     *
+     * @throws FacebookSDKException
+     * @throws JsonException
+     *
+     * @noinspection PhpUnused
      */
     public function getCanvasHelper(): FacebookCanvasHelper
     {
@@ -295,6 +308,11 @@ class Facebook
 
     /**
      * Returns the page tab helper.
+     *
+     * @throws FacebookSDKException
+     * @throws JsonException
+     *
+     * @noinspection PhpUnused
      */
     public function getPageTabHelper(): FacebookPageTabHelper
     {
@@ -305,6 +323,7 @@ class Facebook
      * Sends a GET request to Graph and returns the result.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function get(string $endpoint, AccessToken|string|null $accessToken = null, ?string $eTag = null, ?string $graphVersion = null): FacebookResponse
     {
@@ -322,6 +341,7 @@ class Facebook
      * Sends a POST request to Graph and returns the result.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function post(string $endpoint, array $params = [], AccessToken|string|null $accessToken = null, ?string $eTag = null, ?string $graphVersion = null): FacebookResponse
     {
@@ -339,6 +359,8 @@ class Facebook
      * Sends a DELETE request to Graph and returns the result.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
+     * @noinspection PhpUnused
      */
     public function delete(string $endpoint, array $params = [], AccessToken|string|null $accessToken = null, ?string $eTag = null, ?string $graphVersion = null): FacebookResponse
     {
@@ -356,6 +378,7 @@ class Facebook
      * Sends a request to Graph for the next page of results.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function next(GraphEdge $graphEdge): ?GraphEdge
     {
@@ -366,6 +389,7 @@ class Facebook
      * Sends a request to Graph for the previous page of results.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function previous(GraphEdge $graphEdge): ?GraphEdge
     {
@@ -376,6 +400,7 @@ class Facebook
      * Sends a request to Graph for the next page of results.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function getPaginationResults(GraphEdge $graphEdge, string $direction): ?GraphEdge
     {
@@ -397,6 +422,7 @@ class Facebook
      * Sends a request to Graph and returns the result.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function sendRequest(string $method, string $endpoint, array $params = [], AccessToken|string|null $accessToken = null, ?string $eTag = null, ?string $graphVersion = null): FacebookResponse
     {
@@ -411,6 +437,9 @@ class Facebook
      * Sends a batched request to Graph and returns the result.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
+     *
+     * @noinspection PhpUnused
      */
     public function sendBatchRequest(array $requests, AccessToken|string|null $accessToken = null, ?string $graphVersion = null): FacebookBatchResponse
     {
@@ -471,6 +500,8 @@ class Facebook
      * Factory to create FacebookFile's.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function fileToUpload(string $pathToFile): FacebookFile
     {
@@ -517,6 +548,7 @@ class Facebook
      * Attempts to upload a chunk of a file in $retryCountdown tries.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     private function maxTriesTransfer(FacebookResumableUploader $uploader, string $endpoint, FacebookTransferChunk $chunk, int $retryCountdown): FacebookTransferChunk
     {

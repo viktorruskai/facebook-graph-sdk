@@ -97,6 +97,7 @@ abstract class FacebookSignedRequestFromInputHelper
      * Returns an AccessToken entity from the signed request.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function getAccessToken(): ?AccessToken
     {
@@ -118,6 +119,8 @@ abstract class FacebookSignedRequestFromInputHelper
 
     /**
      * Returns the SignedRequest entity.
+     *
+     * @noinspection PhpUnused
      */
     public function getSignedRequest(): ?SignedRequest
     {
@@ -126,6 +129,8 @@ abstract class FacebookSignedRequestFromInputHelper
 
     /**
      * Returns the user_id if available.
+     *
+     * @noinspection PhpUnused
      */
     public function getUserId(): ?string
     {

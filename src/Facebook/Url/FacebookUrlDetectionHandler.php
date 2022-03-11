@@ -1,5 +1,4 @@
 <?php
-/** @noinspection ALL */
 declare(strict_types=1);
 
 /**
@@ -159,6 +158,6 @@ class FacebookUrlDetectionHandler implements UrlDetectionInterface
 
         return preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $host) //valid chars check
             && 0 < strlen($host) && strlen($host) < 254 //overall length check
-            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $host); //length of each label
+            && preg_match("/^[^.]{1,63}(\.[^.]{1,63})*$/", $host); //length of each label `/^[^\.]{1,63}(\.[^\.]{1,63})*$/`
     }
 }

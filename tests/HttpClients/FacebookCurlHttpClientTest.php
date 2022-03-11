@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace Facebook\Tests\HttpClients;
 
 use Facebook\Exceptions\FacebookSDKException;
-use Facebook\Http\GraphRawResponse;
 use Facebook\HttpClients\FacebookCurl;
 use Facebook\HttpClients\FacebookCurlHttpClient;
 use Mockery as m;
@@ -249,7 +248,7 @@ class FacebookCurlHttpClientTest extends AbstractTestHttpClient
         $this->curlMock
             ->shouldReceive('errno')
             ->once()
-            ->andReturn(null);
+            ->andReturn(0);
         $this->curlMock
             ->shouldReceive('close')
             ->once()
@@ -257,7 +256,6 @@ class FacebookCurlHttpClientTest extends AbstractTestHttpClient
 
         $response = $this->curlClient->send('http://foo.com/', 'GET', '', [], 60);
 
-        $this->assertInstanceOf(GraphRawResponse::class, $response);
         $this->assertEquals($this->fakeRawBody, $response->getBody());
         $this->assertEquals($this->fakeHeadersAsArray, $response->getHeaders());
         $this->assertEquals(200, $response->getHttpResponseCode());

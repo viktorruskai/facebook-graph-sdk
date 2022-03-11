@@ -23,14 +23,15 @@ declare(strict_types=1);
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook;
 
-use ArrayIterator;
-use InvalidArgumentException;
-use IteratorAggregate;
 use ArrayAccess;
+use ArrayIterator;
 use Facebook\Authentication\AccessToken;
 use Facebook\Exceptions\FacebookSDKException;
+use InvalidArgumentException;
+use IteratorAggregate;
 use JsonException;
 
 /**
@@ -44,11 +45,6 @@ class FacebookBatchRequest extends FacebookRequest implements IteratorAggregate,
      * @var array An array of FacebookRequest entities to send.
      */
     protected array $requests = [];
-
-    /**
-     * @var array An array of files to upload.
-     */
-    protected array $attachedFiles;
 
     /**
      * Creates a new Request entity.

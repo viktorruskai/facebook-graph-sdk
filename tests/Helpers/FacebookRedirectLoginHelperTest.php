@@ -34,6 +34,7 @@ use Facebook\Helpers\FacebookRedirectLoginHelper;
 use Facebook\PersistentData\FacebookMemoryPersistentDataHandler;
 use Facebook\Tests\Fixtures\FooPseudoRandomStringGenerator;
 use Facebook\Tests\Fixtures\FooRedirectLoginOAuth2Client;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 
 class FacebookRedirectLoginHelperTest extends TestCase
@@ -47,6 +48,9 @@ class FacebookRedirectLoginHelperTest extends TestCase
     protected const FOO_STATE = "foo_state";
     protected const FOO_PARAM = "some_param=blah";
 
+    /**
+     * @throws FacebookSDKException
+     */
     protected function setUp(): void
     {
         $this->persistentDataHandler = new FacebookMemoryPersistentDataHandler();
@@ -99,6 +103,7 @@ class FacebookRedirectLoginHelperTest extends TestCase
 
     /**
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function testAnAccessTokenCanBeObtainedFromRedirect(): void
     {

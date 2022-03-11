@@ -23,6 +23,7 @@ declare(strict_types=1);
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Url;
 
 /**
@@ -35,8 +36,8 @@ class FacebookUrlManipulator
     /**
      * Remove params from a URL.
      *
-     * @param string $url            The URL to filter.
-     * @param array  $paramsToFilter The params to filter from the URL.
+     * @param string $url The URL to filter.
+     * @param array $paramsToFilter The params to filter from the URL.
      *
      * @return string The URL with the params removed.
      */
@@ -71,8 +72,8 @@ class FacebookUrlManipulator
     /**
      * Gracefully appends params to the URL.
      *
-     * @param string $url       The URL that will receive the params.
-     * @param array  $newParams The params to append to the URL.
+     * @param string $url The URL that will receive the params.
+     * @param array $newParams The params to append to the URL.
      */
     public static function appendParamsToUrl(string $url, array $newParams = []): string
     {
@@ -120,7 +121,7 @@ class FacebookUrlManipulator
      * Any params that already exist in the second URL will go untouched.
      *
      * @param string $urlToStealFrom The URL harvest the params from.
-     * @param string $urlToAddTo     The URL that will receive the new params.
+     * @param string $urlToAddTo The URL that will receive the new params.
      *
      * @return string The $urlToAddTo with any new params from $urlToStealFrom.
      */

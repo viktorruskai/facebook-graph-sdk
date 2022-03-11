@@ -23,11 +23,10 @@ declare(strict_types=1);
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook;
 
 use Facebook\Authentication\AccessToken;
-use Facebook\Exceptions\FacebookSDKException;
-use JetBrains\PhpStorm\Pure;
 use Serializable;
 
 class FacebookApp implements Serializable
@@ -91,14 +90,14 @@ class FacebookApp implements Serializable
     /**
      * Unserializes a string as a FacebookApp entity.
      */
-    public function unserialize(string $data)
+    public function unserialize(string $data): void
     {
         [$id, $secret] = explode('|', $data);
 
+        /** @noinspection PhpExpressionResultUnusedInspection */
         $this->__construct($id, $secret);
     }
 
-    #[Pure]
     public function __serialize(): array
     {
         return (array)$this->serialize();

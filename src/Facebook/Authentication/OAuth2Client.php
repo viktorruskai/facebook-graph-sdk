@@ -35,6 +35,7 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookResponse;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
+use JsonException;
 
 /**
  * Class OAuth2Client
@@ -88,6 +89,7 @@ class OAuth2Client
      * Get the metadata associated with the access token.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function debugToken(string|AccessToken $accessToken): AccessTokenMetadata
     {
@@ -131,6 +133,7 @@ class OAuth2Client
      * Get a valid access token from a code.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function getAccessTokenFromCode(string $code, string $redirectUri = ''): AccessToken
     {
@@ -146,6 +149,7 @@ class OAuth2Client
      * Exchanges a short-lived access token with a long-lived access token.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function getLongLivedAccessToken(string|AccessToken $accessToken): AccessToken
     {
@@ -162,6 +166,7 @@ class OAuth2Client
      * Get a valid code from an access token.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function getCodeFromLongLivedAccessToken(string|AccessToken $accessToken, string $redirectUri = ''): AccessToken|string
     {
@@ -183,6 +188,7 @@ class OAuth2Client
      * Send a request to the OAuth endpoint.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     protected function requestAnAccessToken(array $params): AccessToken
     {
@@ -215,6 +221,7 @@ class OAuth2Client
      *
      * @throws FacebookResponseException
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     protected function sendRequestWithClientParams(string $endpoint, array $params, string|AccessToken|null $accessToken = null): FacebookResponse
     {

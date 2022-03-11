@@ -36,6 +36,7 @@ use Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface;
 use Facebook\Url\FacebookUrlDetectionHandler;
 use Facebook\Url\FacebookUrlManipulator;
 use Facebook\Url\UrlDetectionInterface;
+use JsonException;
 use function hash_equals;
 
 /**
@@ -75,6 +76,8 @@ class FacebookRedirectLoginHelper
      * @param PersistentDataInterface|null $persistentDataHandler The persistent data handler.
      * @param UrlDetectionInterface|null $urlHandler The URL detection handler.
      * @param PseudoRandomStringGeneratorInterface|null $prsg The cryptographically secure pseudo-random string generator.
+     *
+     * @throws FacebookSDKException
      */
     public function __construct(OAuth2Client $oAuth2Client, PersistentDataInterface $persistentDataHandler = null, UrlDetectionInterface $urlHandler = null, PseudoRandomStringGeneratorInterface $prsg = null)
     {
@@ -175,6 +178,8 @@ class FacebookRedirectLoginHelper
      * @param string $separator The separator to use in http_build_query().
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getReRequestUrl(string $redirectUrl, array $scope = [], string $separator = '&'): string
     {
@@ -191,6 +196,8 @@ class FacebookRedirectLoginHelper
      * @param string $separator The separator to use in http_build_query().
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getReAuthenticationUrl(string $redirectUrl, array $scope = [], string $separator = '&'): string
     {
@@ -205,6 +212,7 @@ class FacebookRedirectLoginHelper
      * @param string|null $redirectUrl The redirect URL.
      *
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function getAccessToken(string $redirectUrl = null): ?AccessToken
     {
@@ -271,6 +279,8 @@ class FacebookRedirectLoginHelper
 
     /**
      * Return the error code.
+     *
+     * @noinspection PhpUnused
      */
     public function getErrorCode(): ?string
     {
@@ -279,6 +289,8 @@ class FacebookRedirectLoginHelper
 
     /**
      * Returns the error.
+     *
+     * @noinspection PhpUnused
      */
     public function getError(): ?string
     {
@@ -287,6 +299,8 @@ class FacebookRedirectLoginHelper
 
     /**
      * Returns the error reason.
+     *
+     * @noinspection PhpUnused
      */
     public function getErrorReason(): ?string
     {
@@ -295,6 +309,8 @@ class FacebookRedirectLoginHelper
 
     /**
      * Returns the error description.
+     *
+     * @noinspection PhpUnused
      */
     public function getErrorDescription(): ?string
     {

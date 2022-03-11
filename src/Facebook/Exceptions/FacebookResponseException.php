@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -25,7 +27,6 @@
 namespace Facebook\Exceptions;
 
 use Facebook\FacebookResponse;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class FacebookResponseException
@@ -155,7 +156,6 @@ class FacebookResponseException extends FacebookSDKException
     /**
      * Returns the HTTP status code
      */
-    #[Pure]
     public function getHttpStatusCode(): int
     {
         return $this->response->getHttpStatusCode();
@@ -180,7 +180,6 @@ class FacebookResponseException extends FacebookSDKException
     /**
      * Returns the raw response used to create the exception.
      */
-    #[Pure]
     public function getRawResponse(): string
     {
         return $this->response->getBody();
@@ -188,6 +187,8 @@ class FacebookResponseException extends FacebookSDKException
 
     /**
      * Returns the decoded response used to create the exception.
+     *
+     * @noinspection PhpUnused
      */
     public function getResponseData(): array
     {
@@ -196,6 +197,8 @@ class FacebookResponseException extends FacebookSDKException
 
     /**
      * Returns the response entity used to create the exception.
+     *
+     * @noinspection PhpUnused
      */
     public function getResponse(): FacebookResponse
     {

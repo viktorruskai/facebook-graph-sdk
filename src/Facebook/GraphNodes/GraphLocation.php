@@ -23,6 +23,7 @@ declare(strict_types=1);
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 /**
@@ -34,6 +35,8 @@ class GraphLocation extends GraphNode
 {
     /**
      * Returns the street component of the location
+     *
+     * @noinspection PhpUnused
      */
     public function getStreet(): ?string
     {
@@ -42,6 +45,8 @@ class GraphLocation extends GraphNode
 
     /**
      * Returns the city component of the location
+     *
+     * @noinspection PhpUnused
      */
     public function getCity(): ?string
     {
@@ -58,6 +63,8 @@ class GraphLocation extends GraphNode
 
     /**
      * Returns the country component of the location
+     *
+     * @noinspection PhpUnused
      */
     public function getCountry(): ?string
     {
@@ -66,6 +73,8 @@ class GraphLocation extends GraphNode
 
     /**
      * Returns the zipcode component of the location
+     *
+     * @noinspection PhpUnused
      */
     public function getZip(): ?string
     {
@@ -74,6 +83,8 @@ class GraphLocation extends GraphNode
 
     /**
      * Returns the latitude component of the location
+     *
+     * @noinspection PhpUnused
      */
     public function getLatitude(): ?float
     {
@@ -82,6 +93,8 @@ class GraphLocation extends GraphNode
 
     /**
      * Returns the street component of the location
+     *
+     * @noinspection PhpUnused
      */
     public function getLongitude(): ?float
     {

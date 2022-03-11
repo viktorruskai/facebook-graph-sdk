@@ -103,6 +103,8 @@ class FacebookClient
 
     /**
      * Sets the HTTP client handler.
+     *
+     * @noinspection PhpUnused
      */
     public function setHttpClientHandler(FacebookHttpClientInterface $httpClientHandler): void
     {
@@ -149,6 +151,8 @@ class FacebookClient
 
     /**
      * Prepares the request for sending to the client handler.
+     *
+     * @throws FacebookSDKException
      */
     public function prepareRequestMessage(FacebookRequest $request): array
     {

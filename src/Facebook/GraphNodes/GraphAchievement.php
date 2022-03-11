@@ -77,6 +77,8 @@ class GraphAchievement extends GraphNode
 
     /**
      * Returns information about the achievement type this instance is connected with.
+     *
+     * @noinspection PhpUnused
      */
     public function getData(): ?array
     {

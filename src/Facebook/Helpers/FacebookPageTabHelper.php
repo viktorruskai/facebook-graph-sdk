@@ -26,8 +26,10 @@ declare(strict_types=1);
 
 namespace Facebook\Helpers;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use Facebook\FacebookClient;
+use JsonException;
 
 /**
  * Class FacebookPageTabHelper
@@ -43,7 +45,10 @@ class FacebookPageTabHelper extends FacebookCanvasHelper
      *
      * @param FacebookApp $app The FacebookApp entity.
      * @param FacebookClient $client The client to make HTTP requests.
-     * @param string|null $graphVersion The version of Graph to use.
+     * @param null $graphVersion The version of Graph to use.
+     *
+     * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function __construct(FacebookApp $app, FacebookClient $client, $graphVersion = null)
     {

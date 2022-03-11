@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -24,14 +26,6 @@
 
 namespace Facebook\GraphNodes;
 
-/**
- * Class Collection
- *
- * Modified version of Collection in "illuminate/support" by Taylor Otwell
- *
- * @package Facebook
- */
-
 use ArrayAccess;
 use ArrayIterator;
 use Closure;
@@ -39,6 +33,13 @@ use Countable;
 use IteratorAggregate;
 use JsonException;
 
+/**
+ * Class Collection
+ *
+ * Modified version of Collection in "illuminate/support" by Taylor Otwell
+ *
+ * @package Facebook
+ */
 class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**

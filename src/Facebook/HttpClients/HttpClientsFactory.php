@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,11 +23,12 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\HttpClients;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Exception;
+use RuntimeException;
 
 class HttpClientsFactory
 {
@@ -37,14 +40,10 @@ class HttpClientsFactory
     /**
      * HTTP client generation.
      *
-     * @param FacebookHttpClientInterface|Client|string|null $handler
-     *
-     * @throws Exception                If the cURL extension or the Guzzle client aren't available (if required).
      * @throws InvalidArgumentException If the http client handler isn't "curl", "stream", "guzzle", or an instance of Facebook\HttpClients\FacebookHttpClientInterface.
-     *
-     * @return FacebookHttpClientInterface
+     * @throws RuntimeException If the cURL extension or the Guzzle client aren't available (if required).
      */
-    public static function createHttpClient($handler)
+    public static function createHttpClient(string|Client|FacebookHttpClientInterface|null $handler): FacebookHttpClientInterface
     {
         if (!$handler) {
             return self::detectDefaultClient();
@@ -59,14 +58,14 @@ class HttpClientsFactory
         }
         if ('curl' === $handler) {
             if (!extension_loaded('curl')) {
-                throw new Exception('The cURL extension must be loaded in order to use the "curl" handler.');
+                throw new RuntimeException('The cURL extension must be loaded in order to use the "curl" handler.');
             }
 
             return new FacebookCurlHttpClient();
         }
 
-        if ('guzzle' === $handler && !class_exists('GuzzleHttp\Client')) {
-            throw new Exception('The Guzzle HTTP client must be included in order to use the "guzzle" handler.');
+        if ('guzzle' === $handler && !class_exists(Client::class)) {
+            throw new RuntimeException('The Guzzle HTTP client must be included in order to use the "guzzle" handler.');
         }
 
         if ($handler instanceof Client) {
@@ -81,16 +80,14 @@ class HttpClientsFactory
 
     /**
      * Detect default HTTP client.
-     *
-     * @return FacebookHttpClientInterface
      */
-    private static function detectDefaultClient()
+    private static function detectDefaultClient(): FacebookCurlHttpClient|FacebookGuzzleHttpClient|FacebookStreamHttpClient|FacebookHttpClientInterface
     {
         if (extension_loaded('curl')) {
             return new FacebookCurlHttpClient();
         }
 
-        if (class_exists('GuzzleHttp\Client')) {
+        if (class_exists(Client::class)) {
             return new FacebookGuzzleHttpClient();
         }
 

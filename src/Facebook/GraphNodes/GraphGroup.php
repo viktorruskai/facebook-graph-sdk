@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,7 +23,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
+
+use DateTime;
 
 /**
  * Class GraphGroup
@@ -34,26 +39,22 @@ class GraphGroup extends GraphNode
      * @var array Maps object key names to GraphNode types.
      */
     protected static array $graphObjectMap = [
-        'cover' => '\Facebook\GraphNodes\GraphCoverPhoto',
-        'venue' => '\Facebook\GraphNodes\GraphLocation',
+        'cover' => GraphCoverPhoto::class,
+        'venue' => GraphLocation::class,
     ];
 
     /**
      * Returns the `id` (The Group ID) as string if present.
-     *
-     * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->getField('id');
     }
 
     /**
      * Returns the `cover` (The cover photo of the Group) as GraphCoverPhoto if present.
-     *
-     * @return GraphCoverPhoto|null
      */
-    public function getCover()
+    public function getCover(): ?GraphCoverPhoto
     {
         return $this->getField('cover');
     }
@@ -61,9 +62,9 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `description` (A brief description of the Group) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->getField('description');
     }
@@ -71,9 +72,9 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `email` (The email address to upload content to the Group. Only current members of the Group can use this) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->getField('email');
     }
@@ -81,9 +82,9 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `icon` (The URL for the Group's icon) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getIcon()
+    public function getIcon(): ?string
     {
         return $this->getField('icon');
     }
@@ -91,19 +92,17 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `link` (The Group's website) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getLink()
+    public function getLink(): ?string
     {
         return $this->getField('link');
     }
 
     /**
      * Returns the `name` (The name of the Group) as string if present.
-     *
-     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->getField('name');
     }
@@ -111,9 +110,9 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `member_request_count` (Number of people asking to join the group.) as int if present.
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getMemberRequestCount()
+    public function getMemberRequestCount(): ?int
     {
         return $this->getField('member_request_count');
     }
@@ -121,9 +120,9 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `owner` (The profile that created this Group) as GraphNode if present.
      *
-     * @return GraphNode|null
+     * @noinspection PhpUnused
      */
-    public function getOwner()
+    public function getOwner(): ?GraphNode
     {
         return $this->getField('owner');
     }
@@ -131,9 +130,9 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `parent` (The parent Group of this Group, if it exists) as GraphNode if present.
      *
-     * @return GraphNode|null
+     * @noinspection PhpUnused
      */
-    public function getParent()
+    public function getParent(): ?GraphNode
     {
         return $this->getField('parent');
     }
@@ -141,9 +140,9 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `privacy` (The privacy setting of the Group) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getPrivacy()
+    public function getPrivacy(): ?string
     {
         return $this->getField('privacy');
     }
@@ -151,19 +150,17 @@ class GraphGroup extends GraphNode
     /**
      * Returns the `updated_time` (The last time the Group was updated (this includes changes in the Group's properties and changes in posts and comments if user can see them)) as \DateTime if present.
      *
-     * @return \DateTime|null
+     * @noinspection PhpUnused
      */
-    public function getUpdatedTime()
+    public function getUpdatedTime(): ?DateTime
     {
         return $this->getField('updated_time');
     }
 
     /**
      * Returns the `venue` (The location for the Group) as GraphLocation if present.
-     *
-     * @return GraphLocation|null
      */
-    public function getVenue()
+    public function getVenue(): ?GraphLocation
     {
         return $this->getField('venue');
     }

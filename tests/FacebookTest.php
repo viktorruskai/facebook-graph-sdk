@@ -422,6 +422,7 @@ class FacebookTest extends TestCase
 
     /**
      * @throws FacebookSDKException
+     * @throws JsonException
      */
     public function testPaginationReturnsProperResponse(): void
     {

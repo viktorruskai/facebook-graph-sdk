@@ -43,6 +43,9 @@ class GraphNodeTest extends TestCase
         $this->assertEquals([], $backingData);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testAGraphNodeCanInstantiateWithData(): void
     {
         $graphNode = new GraphNode(['foo' => 'bar']);
@@ -106,6 +109,9 @@ class GraphNodeTest extends TestCase
         $this->assertEquals(1405395893, $timeStamp);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testUncastingAGraphNodeWillUncastTheDateTimeObject(): void
     {
         $collectionOne = new GraphNode(['foo', 'bar']);
@@ -124,6 +130,9 @@ class GraphNodeTest extends TestCase
         ], $uncastArray);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testGettingGraphNodeAsAnArrayWillNotUncastTheDateTimeObject(): void
     {
         $collection = new GraphNode([
@@ -138,6 +147,7 @@ class GraphNodeTest extends TestCase
 
     /**
      * @throws JsonException
+     * @throws Exception
      */
     public function testReturningACollectionAsJasonWillSafelyRepresentDateTimes(): void
     {

@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Facebook\Tests\PseudoRandomString;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\PseudoRandomString\PseudoRandomStringGeneratorFactory;
 use Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -37,12 +38,16 @@ class PseudoRandomStringFactoryTest extends TestCase
 
     /**
      * @dataProvider csprngProvider
+     *
+     * @throws FacebookSDKException
      */
     public function testCsprng(mixed $handler, string $expected): void
     {
         $pseudoRandomStringGenerator = PseudoRandomStringGeneratorFactory::createPseudoRandomStringGenerator($handler);
 
         $this->assertInstanceOf(self::COMMON_INTERFACE, $pseudoRandomStringGenerator);
+
+        /** @noinspection UnnecessaryAssertionInspection */
         $this->assertInstanceOf($expected, $pseudoRandomStringGenerator);
     }
 

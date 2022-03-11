@@ -37,6 +37,8 @@ class GraphSessionInfo extends GraphNode
 {
     /**
      * Returns the application id the token was issued for.
+     *
+     * @noinspection PhpUnused
      */
     public function getAppId(): ?string
     {
@@ -45,6 +47,8 @@ class GraphSessionInfo extends GraphNode
 
     /**
      * Returns the application name the token was issued for.
+     *
+     * @noinspection PhpUnused
      */
     public function getApplication(): ?string
     {
@@ -61,6 +65,8 @@ class GraphSessionInfo extends GraphNode
 
     /**
      * Returns whether the token is valid.
+     *
+     * @noinspection PhpUnused
      */
     public function getIsValid(): bool
     {
@@ -77,6 +83,8 @@ class GraphSessionInfo extends GraphNode
 
     /**
      * Returns the scope permissions associated with the token.
+     *
+     * @noinspection PhpUnused
      */
     public function getScopes(): array
     {
@@ -85,6 +93,8 @@ class GraphSessionInfo extends GraphNode
 
     /**
      * Returns the login id of the user associated with the token.
+     *
+     * @noinspection PhpUnused
      */
     public function getUserId(): ?string
     {

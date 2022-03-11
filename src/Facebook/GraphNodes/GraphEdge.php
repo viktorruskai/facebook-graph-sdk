@@ -103,6 +103,8 @@ class GraphEdge extends Collection
 
     /**
      * Returns the next cursor if it exists.
+     *
+     * @noinspection PhpUnused
      */
     public function getNextCursor(): ?string
     {
@@ -111,6 +113,8 @@ class GraphEdge extends Collection
 
     /**
      * Returns the previous cursor if it exists.
+     *
+     * @noinspection PhpUnused
      */
     public function getPreviousCursor(): ?string
     {
@@ -204,6 +208,8 @@ class GraphEdge extends Collection
      * The total number of results according to Graph if it exists.
      *
      * This will be returned if the summary=true modifier is present in the request.
+     *
+     * @noinspection PhpUnused
      */
     public function getTotalCount(): ?int
     {

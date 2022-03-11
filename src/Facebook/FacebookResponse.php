@@ -101,6 +101,8 @@ class FacebookResponse
 
     /**
      * Return the FacebookApp entity used for this response.
+     *
+     * @noinspection PhpUnused
      */
     public function getApp(): FacebookApp
     {
@@ -165,6 +167,8 @@ class FacebookResponse
 
     /**
      * Get the version of Graph that returned this response.
+     *
+     * @noinspection PhpUnused
      */
     public function getGraphVersion(): ?string
     {
@@ -183,6 +187,8 @@ class FacebookResponse
      * Throws the exception.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function throwException(): void
     {
@@ -261,6 +267,8 @@ class FacebookResponse
      * Convenience method for creating a GraphAlbum collection.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getGraphAlbum(): GraphAlbum
     {
@@ -271,6 +279,8 @@ class FacebookResponse
      * Convenience method for creating a GraphPage collection.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getGraphPage(): GraphPage
     {
@@ -281,6 +291,8 @@ class FacebookResponse
      * Convenience method for creating a GraphSessionInfo collection.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getGraphSessionInfo(): GraphSessionInfo
     {
@@ -291,6 +303,8 @@ class FacebookResponse
      * Convenience method for creating a GraphUser collection.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getGraphUser(): GraphUser
     {
@@ -301,6 +315,8 @@ class FacebookResponse
      * Convenience method for creating a GraphEvent collection.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getGraphEvent(): GraphEvent
     {
@@ -311,6 +327,8 @@ class FacebookResponse
      * Convenience method for creating a GraphGroup collection.
      *
      * @throws FacebookSDKException
+     *
+     * @noinspection PhpUnused
      */
     public function getGraphGroup(): GraphGroup
     {

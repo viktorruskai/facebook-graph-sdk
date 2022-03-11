@@ -54,6 +54,8 @@ class GraphPage extends GraphNode
 
     /**
      * Returns the Category for the user's page as a string if present.
+     *
+     * @noinspection PhpUnused
      */
     public function getCategory(): ?string
     {
@@ -94,6 +96,8 @@ class GraphPage extends GraphNode
 
     /**
      * Returns CoverPhoto of the Page.
+     *
+     * @noinspection PhpUnused
      */
     public function getCover(): ?GraphCoverPhoto
     {
@@ -102,6 +106,8 @@ class GraphPage extends GraphNode
 
     /**
      * Returns Picture of the Page.
+     *
+     * @noinspection PhpUnused
      */
     public function getPicture(): ?GraphPicture
     {
@@ -122,6 +128,8 @@ class GraphPage extends GraphNode
      * Returns the roles of the page admin user.
      *
      * Only available in the `/me/accounts` context.
+     *
+     * @noinspection PhpUnused
      */
     public function getPerms(): ?array
     {
@@ -130,6 +138,8 @@ class GraphPage extends GraphNode
 
     /**
      * Returns the `fan_count` (Number of people who likes to page) as int if present.
+     *
+     * @noinspection PhpUnused
      */
     public function getFanCount(): ?int
     {

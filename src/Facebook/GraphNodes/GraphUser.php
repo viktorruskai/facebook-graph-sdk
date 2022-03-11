@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 /**
@@ -34,28 +37,24 @@ class GraphUser extends GraphNode
      * @var array Maps object key names to Graph object types.
      */
     protected static array $graphObjectMap = [
-        'hometown' => '\Facebook\GraphNodes\GraphPage',
-        'location' => '\Facebook\GraphNodes\GraphPage',
-        'significant_other' => '\Facebook\GraphNodes\GraphUser',
-        'picture' => '\Facebook\GraphNodes\GraphPicture',
+        'hometown' => GraphPage::class,
+        'location' => GraphPage::class,
+        'significant_other' => GraphUser::class,
+        'picture' => GraphPicture::class,
     ];
 
     /**
      * Returns the ID for the user as a string if present.
-     *
-     * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->getField('id');
     }
 
     /**
      * Returns the name for the user as a string if present.
-     *
-     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->getField('name');
     }
@@ -63,9 +62,9 @@ class GraphUser extends GraphNode
     /**
      * Returns the first name for the user as a string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getFirstName()
+    public function getFirstName(): ?string
     {
         return $this->getField('first_name');
     }
@@ -73,9 +72,9 @@ class GraphUser extends GraphNode
     /**
      * Returns the middle name for the user as a string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getMiddleName()
+    public function getMiddleName(): ?string
     {
         return $this->getField('middle_name');
     }
@@ -83,9 +82,9 @@ class GraphUser extends GraphNode
     /**
      * Returns the last name for the user as a string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getLastName()
+    public function getLastName(): ?string
     {
         return $this->getField('last_name');
     }
@@ -93,9 +92,9 @@ class GraphUser extends GraphNode
     /**
      * Returns the email for the user as a string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->getField('email');
     }
@@ -103,9 +102,9 @@ class GraphUser extends GraphNode
     /**
      * Returns the gender for the user as a string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getGender()
+    public function getGender(): ?string
     {
         return $this->getField('gender');
     }
@@ -113,9 +112,9 @@ class GraphUser extends GraphNode
     /**
      * Returns the Facebook URL for the user as a string if available.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getLink()
+    public function getLink(): ?string
     {
         return $this->getField('link');
     }
@@ -123,49 +122,41 @@ class GraphUser extends GraphNode
     /**
      * Returns the users birthday, if available.
      *
-     * @return Birthday|null
+     * @noinspection PhpUnused
      */
-    public function getBirthday()
+    public function getBirthday(): ?Birthday
     {
         return $this->getField('birthday');
     }
 
     /**
      * Returns the current location of the user as a GraphPage.
-     *
-     * @return GraphPage|null
      */
-    public function getLocation()
+    public function getLocation(): ?GraphPage
     {
         return $this->getField('location');
     }
 
     /**
      * Returns the current location of the user as a GraphPage.
-     *
-     * @return GraphPage|null
      */
-    public function getHometown()
+    public function getHometown(): ?GraphPage
     {
         return $this->getField('hometown');
     }
 
     /**
      * Returns the current location of the user as a GraphUser.
-     *
-     * @return GraphUser|null
      */
-    public function getSignificantOther()
+    public function getSignificantOther(): ?GraphUser
     {
         return $this->getField('significant_other');
     }
 
     /**
      * Returns the picture of the user as a GraphPicture
-     *
-     * @return GraphPicture|null
      */
-    public function getPicture()
+    public function getPicture(): ?GraphPicture
     {
         return $this->getField('picture');
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,20 +23,21 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use Facebook\FacebookRequest;
 use Facebook\FacebookResponse;
-use Facebook\GraphNodes\GraphNodeFactory;
-use JsonException;
-use PHPUnit\Framework\TestCase;
-use Facebook\GraphNodes\GraphNode;
 use Facebook\GraphNodes\GraphAlbum;
+use Facebook\GraphNodes\GraphEdge;
+use Facebook\GraphNodes\GraphNode;
+use Facebook\GraphNodes\GraphNodeFactory;
 use Facebook\Tests\Fixtures\MyFooGraphNode;
 use Facebook\Tests\Fixtures\MyFooSubClassGraphNode;
-use Facebook\GraphNodes\GraphEdge;
+use JsonException;
+use PHPUnit\Framework\TestCase;
 
 class GraphNodeFactoryTest extends TestCase
 {

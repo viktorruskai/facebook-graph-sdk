@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace Facebook\Tests\HttpClients;
 
 use Facebook\Exceptions\FacebookSDKException;
-use Facebook\Http\GraphRawResponse;
 use Facebook\HttpClients\FacebookStream;
 use Facebook\HttpClients\FacebookStreamHttpClient;
 use Mockery as m;
@@ -112,7 +111,6 @@ class FacebookStreamHttpClientTest extends AbstractTestHttpClient
 
         $response = $this->streamClient->send('http://foo.com/', 'GET', 'foo_body', ['X-foo' => 'bar'], 123);
 
-        $this->assertInstanceOf(GraphRawResponse::class, $response);
         $this->assertEquals($this->fakeRawBody, $response->getBody());
         $this->assertEquals($this->fakeHeadersAsArray, $response->getHeaders());
         $this->assertEquals(200, $response->getHttpResponseCode());
@@ -129,7 +127,7 @@ class FacebookStreamHttpClientTest extends AbstractTestHttpClient
         $this->streamMock
             ->shouldReceive('getResponseHeaders')
             ->once()
-            ->andReturn(null);
+            ->andReturn([]);
         $this->streamMock
             ->shouldReceive('fileGetContents')
             ->once()
