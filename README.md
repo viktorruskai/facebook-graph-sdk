@@ -1,6 +1,6 @@
-# Facebook SDK for PHP
+# Facebook Graph SDK
 
-[![Latest Stable Version](https://img.shields.io/v/release/viktorruskai/php-graph-sdk)](https://packagist.org/packages/viktorruskai/php-graph-sdk)
+[![Latest Stable Version](https://img.shields.io/v/release/viktorruskai/facebook-graph-sdk)](https://packagist.org/packages/viktorruskai/facebook-graph-sdk)
 
 This repository is forked from [original package](https://github.com/facebookarchive/php-graph-sdk). It was refactored to handle PHP 8.0 and PHP 8.1.
 
@@ -8,8 +8,8 @@ This repository is forked from [original package](https://github.com/facebookarc
 
 The Facebook PHP SDK can be installed with [Composer](https://getcomposer.org/). Run this command:
 
-```sh
-composer require viktorruskai/php-graph-sdk
+```bash
+$ composer require viktorruskai/php-graph-sdk
 ```
 
 ## Usage

@@ -1,13 +1,13 @@
 {
-  "name": "facebook/graph-sdk",
+  "name": "viktorruskai/facebook-graph-sdk",
   "description": "Facebook SDK for PHP",
   "keywords": [
     "facebook",
     "sdk"
   ],
   "type": "library",
-  "homepage": "https://github.com/facebook/php-graph-sdk",
-  "license": "Facebook Platform",
+  "homepage": "https://github.com/viktorruskai/facebook-graph-sdk",
+  "license": "proprietary",
   "minimum-stability": "dev",
   "authors": [
     {
@@ -44,8 +44,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "5.x-dev",
-      "dev-update": "feature/update"
+      "dev-master": "5.x-dev"
     }
   },
   "scripts": {
