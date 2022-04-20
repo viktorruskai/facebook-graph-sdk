@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Fixtures;
 
 use Facebook\FacebookClient;
@@ -29,12 +32,12 @@ use Facebook\FacebookResponse;
 
 class FooSignedRequestHelperFacebookClient extends FacebookClient
 {
-    public function sendRequest(FacebookRequest $request)
+    public function sendRequest(FacebookRequest $request): FacebookResponse
     {
         $params = $request->getParams();
         $rawResponse = json_encode([
             'access_token' => 'foo_access_token_from:' . $params['code'],
-        ]);
+        ], JSON_THROW_ON_ERROR);
 
         return new FacebookResponse($request, $rawResponse, 200);
     }

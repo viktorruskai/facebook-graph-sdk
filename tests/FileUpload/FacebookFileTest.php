@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,20 +23,26 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\FileUpload;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FileUpload\FacebookFile;
+use PHPUnit\Framework\TestCase;
 
-class FacebookFileTest extends \PHPUnit_Framework_TestCase
+class FacebookFileTest extends TestCase
 {
-    protected $testFile = '';
+    protected string $testFile = '';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->testFile = __DIR__ . '/../foo.txt';
     }
 
-    public function testCanOpenAndReadAndCloseAFile()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCanOpenAndReadAndCloseAFile(): void
     {
         $file = new FacebookFile($this->testFile);
         $fileContents = $file->getContents();
@@ -42,7 +50,10 @@ class FacebookFileTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('This is a text file used for testing. Let\'s dance.', $fileContents);
     }
 
-    public function testPartialFilesCanBeCreated()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testPartialFilesCanBeCreated(): void
     {
         $file = new FacebookFile($this->testFile, 14, 5);
         $fileContents = $file->getContents();
@@ -50,11 +61,10 @@ class FacebookFileTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('is a text file', $fileContents);
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testTryingToOpenAFileThatDoesntExistsThrows()
+    public function testTryingToOpenAFileThatDoesntExistsThrows(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         new FacebookFile('does_not_exist.file');
     }
 }

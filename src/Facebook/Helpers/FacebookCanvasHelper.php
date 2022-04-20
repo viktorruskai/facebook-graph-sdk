@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +22,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Helpers;
 
 /**
@@ -33,19 +35,17 @@ class FacebookCanvasHelper extends FacebookSignedRequestFromInputHelper
     /**
      * Returns the app data value.
      *
-     * @return mixed|null
+     * @noinspection PhpUnused
      */
     public function getAppData()
     {
-        return $this->signedRequest ? $this->signedRequest->get('app_data') : null;
+        return $this->signedRequest?->get('app_data');
     }
 
     /**
      * Get raw signed request from POST.
-     *
-     * @return string|null
      */
-    public function getRawSignedRequest()
+    public function getRawSignedRequest(): ?string
     {
         return $this->getRawSignedRequestFromPost() ?: null;
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,44 +23,51 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Authentication;
 
+use Facebook\Authentication\OAuth2Client;
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use Facebook\FacebookApp;
-use Facebook\Authentication\OAuth2Client;
+use JsonException;
+use PHPUnit\Framework\TestCase;
 
-class OAuth2ClientTest extends \PHPUnit_Framework_TestCase
+class OAuth2ClientTest extends TestCase
 {
 
     /**
      * @const The foo Graph version
      */
-    const TESTING_GRAPH_VERSION = 'v1337';
+    public const TESTING_GRAPH_VERSION = 'v1337';
 
     /**
      * @var FooFacebookClientForOAuth2Test
      */
-    protected $client;
+    protected FooFacebookClientForOAuth2Test $client;
 
     /**
      * @var OAuth2Client
      */
-    protected $oauth;
+    protected OAuth2Client $oauth;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
         $this->client = new FooFacebookClientForOAuth2Test();
         $this->oauth = new OAuth2Client($app, $this->client, static::TESTING_GRAPH_VERSION);
     }
 
-    public function testCanGetMetadataFromAnAccessToken()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testCanGetMetadataFromAnAccessToken(): void
     {
         $this->client->setMetadataResponse();
 
         $metadata = $this->oauth->debugToken('baz_token');
 
-        $this->assertInstanceOf('Facebook\Authentication\AccessTokenMetadata', $metadata);
         $this->assertEquals('444', $metadata->getUserId());
 
         $expectedParams = [
@@ -74,15 +83,15 @@ class OAuth2ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(static::TESTING_GRAPH_VERSION, $request->getGraphVersion());
     }
 
-    public function testCanBuildAuthorizationUrl()
+    public function testCanBuildAuthorizationUrl(): void
     {
         $scope = ['email', 'base_foo'];
         $authUrl = $this->oauth->getAuthorizationUrl('https://foo.bar', 'foo_state', $scope, ['foo' => 'bar'], '*');
 
-        $this->assertContains('*', $authUrl);
+        $this->assertStringContainsString('*', $authUrl);
 
         $expectedUrl = 'https://www.facebook.com/' . static::TESTING_GRAPH_VERSION . '/dialog/oauth?';
-        $this->assertTrue(strpos($authUrl, $expectedUrl) === 0, 'Unexpected base authorization URL returned from getAuthorizationUrl().');
+        $this->assertSame(strpos($authUrl, $expectedUrl), 0, 'Unexpected base authorization URL returned from getAuthorizationUrl().');
 
         $params = [
             'client_id' => '123',
@@ -93,17 +102,20 @@ class OAuth2ClientTest extends \PHPUnit_Framework_TestCase
             'foo' => 'bar',
         ];
         foreach ($params as $key => $value) {
-            $this->assertContains($key . '=' . urlencode($value), $authUrl);
+            $this->assertStringContainsString($key . '=' . urlencode($value), $authUrl);
         }
     }
 
-    public function testCanGetAccessTokenFromCode()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testCanGetAccessTokenFromCode(): void
     {
         $this->client->setAccessTokenResponse();
 
         $accessToken = $this->oauth->getAccessTokenFromCode('bar_code', 'foo_uri');
 
-        $this->assertInstanceOf('Facebook\Authentication\AccessToken', $accessToken);
         $this->assertEquals('my_access_token', $accessToken->getValue());
 
         $expectedParams = [
@@ -122,7 +134,11 @@ class OAuth2ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(static::TESTING_GRAPH_VERSION, $request->getGraphVersion());
     }
 
-    public function testCanGetLongLivedAccessToken()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testCanGetLongLivedAccessToken(): void
     {
         $this->client->setAccessTokenResponse();
 
@@ -143,7 +159,11 @@ class OAuth2ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedParams, $request->getParams());
     }
 
-    public function testCanGetCodeFromLongLivedAccessToken()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testCanGetCodeFromLongLivedAccessToken(): void
     {
         $this->client->setCodeResponse();
 

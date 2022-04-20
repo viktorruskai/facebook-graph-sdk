@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,7 +23,12 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\PseudoRandomString;
+
+use InvalidArgumentException;
+use function bin2hex;
+use function substr;
 
 trait PseudoRandomStringGeneratorTrait
 {
@@ -30,16 +37,12 @@ trait PseudoRandomStringGeneratorTrait
      *
      * @param int $length The length to validate.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function validateLength($length)
+    public function validateLength(int $length): void
     {
-        if (!is_int($length)) {
-            throw new \InvalidArgumentException('getPseudoRandomString() expects an integer for the string length');
-        }
-
         if ($length < 1) {
-            throw new \InvalidArgumentException('getPseudoRandomString() expects a length greater than 1');
+            throw new InvalidArgumentException('getPseudoRandomString() expects a length greater than 1');
         }
     }
 
@@ -47,12 +50,10 @@ trait PseudoRandomStringGeneratorTrait
      * Converts binary data to hexadecimal of arbitrary length.
      *
      * @param string $binaryData The binary data to convert to hex.
-     * @param int    $length     The length of the string to return.
-     *
-     * @return string
+     * @param int $length The length of the string to return.
      */
-    public function binToHex($binaryData, $length)
+    public function binToHex(string $binaryData, int $length): string
     {
-        return \substr(\bin2hex($binaryData), 0, $length);
+        return substr(bin2hex($binaryData), 0, $length);
     }
 }

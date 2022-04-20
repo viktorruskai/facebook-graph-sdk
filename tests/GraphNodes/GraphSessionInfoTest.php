@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,24 +23,28 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
-use Mockery as m;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\FacebookResponse;
 use Facebook\GraphNodes\GraphNodeFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class GraphSessionInfoTest extends \PHPUnit_Framework_TestCase
+class GraphSessionInfoTest extends TestCase
 {
-    /**
-     * @var \Facebook\FacebookResponse
-     */
-    protected $responseMock;
+    protected FacebookResponse $responseMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->responseMock = m::mock('\\Facebook\\FacebookResponse');
+        $this->responseMock = m::mock(FacebookResponse::class);
     }
 
-    public function testDatesGetCastToDateTime()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testDatesGetCastToDateTime(): void
     {
         $dataFromGraph = [
             'expires_at' => 123,
@@ -58,5 +64,6 @@ class GraphSessionInfoTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('DateTime', $expires);
         $this->assertInstanceOf('DateTime', $issuedAt);
+        m::close();
     }
 }

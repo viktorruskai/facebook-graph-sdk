@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,10 +23,11 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\HttpClients;
 
-use Facebook\Http\GraphRawResponse;
 use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Http\GraphRawResponse;
 
 /**
  * Class FacebookCurlHttpClient
@@ -33,25 +36,16 @@ use Facebook\Exceptions\FacebookSDKException;
  */
 class FacebookCurlHttpClient implements FacebookHttpClientInterface
 {
-    /**
-     * @var string The client error message
-     */
-    protected $curlErrorMessage = '';
-
-    /**
-     * @var int The curl client error code
-     */
-    protected $curlErrorCode = 0;
 
     /**
      * @var string|boolean The raw response from the server
      */
-    protected $rawResponse;
+    protected string|bool $rawResponse;
 
     /**
      * @var FacebookCurl Procedural curl as object
      */
-    protected $facebookCurl;
+    protected FacebookCurl $facebookCurl;
 
     /**
      * @param FacebookCurl|null Procedural curl as object
@@ -64,7 +58,7 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
     /**
      * @inheritdoc
      */
-    public function send($url, $method, $body, array $headers, $timeOut)
+    public function send(string $url, string $method, string $body, array $headers, int $timeOut): GraphRawResponse
     {
         $this->openConnection($url, $method, $body, $headers, $timeOut);
         $this->sendRequest();
@@ -74,7 +68,7 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
         }
 
         // Separate the raw headers from the raw body
-        list($rawHeaders, $rawBody) = $this->extractResponseHeadersAndBody();
+        [$rawHeaders, $rawBody] = $this->extractResponseHeadersAndBody();
 
         $this->closeConnection();
 
@@ -84,13 +78,15 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
     /**
      * Opens a new curl connection.
      *
-     * @param string $url     The endpoint to send the request to.
-     * @param string $method  The request method.
-     * @param string $body    The body of the request.
-     * @param array  $headers The request headers.
-     * @param int    $timeOut The timeout in seconds for the request.
+     * @param string $url The endpoint to send the request to.
+     * @param string $method The request method.
+     * @param string $body The body of the request.
+     * @param array $headers The request headers.
+     * @param int $timeOut The timeout in seconds for the request.
+     *
+     * @noinspection PhpComposerExtensionStubsInspection
      */
-    public function openConnection($url, $method, $body, array $headers, $timeOut)
+    public function openConnection(string $url, string $method, string $body, array $headers, int $timeOut): void
     {
         $options = [
             CURLOPT_CUSTOMREQUEST => $method,
@@ -116,7 +112,7 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
     /**
      * Closes an existing curl connection
      */
-    public function closeConnection()
+    public function closeConnection(): void
     {
         $this->facebookCurl->close();
     }
@@ -124,7 +120,7 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
     /**
      * Send the request and get the raw response from curl
      */
-    public function sendRequest()
+    public function sendRequest(): void
     {
         $this->rawResponse = $this->facebookCurl->exec();
     }
@@ -133,10 +129,8 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
      * Compiles the request headers into a curl-friendly format.
      *
      * @param array $headers The request headers.
-     *
-     * @return array
      */
-    public function compileRequestHeaders(array $headers)
+    public function compileRequestHeaders(array $headers): array
     {
         $return = [];
 
@@ -149,10 +143,8 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
 
     /**
      * Extracts the headers and the body into a two-part array
-     *
-     * @return array
      */
-    public function extractResponseHeadersAndBody()
+    public function extractResponseHeadersAndBody(): array
     {
         $parts = explode("\r\n\r\n", $this->rawResponse);
         $rawBody = array_pop($parts);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,7 +23,11 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\PseudoRandomString;
+
+use Facebook\Exceptions\FacebookSDKException;
+use InvalidArgumentException;
 
 /**
  * Interface
@@ -37,9 +43,7 @@ interface PseudoRandomStringGeneratorInterface
      *
      * @param int $length The length of the string to return.
      *
-     * @return string
-     *
-     * @throws \Facebook\Exceptions\FacebookSDKException|\InvalidArgumentException
+     * @throws FacebookSDKException|InvalidArgumentException
      */
-    public function getPseudoRandomString($length);
+    public function getPseudoRandomString(int $length): string;
 }

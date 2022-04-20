@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,58 +23,64 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use Facebook\FacebookApp;
 use Facebook\FacebookRequest;
 use Facebook\FileUpload\FacebookFile;
 use Facebook\FileUpload\FacebookVideo;
+use PHPUnit\Framework\TestCase;
 
-class FacebookRequestTest extends \PHPUnit_Framework_TestCase
+class FacebookRequestTest extends TestCase
 {
-    public function testAnEmptyRequestEntityCanInstantiate()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAnEmptyRequestEntityCanInstantiate(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
         $request = new FacebookRequest($app);
 
-        $this->assertInstanceOf('Facebook\FacebookRequest', $request);
+        $this->assertInstanceOf(FacebookRequest::class, $request);
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAMissingAccessTokenWillThrow()
+    public function testAMissingAccessTokenWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $app = new FacebookApp('123', 'foo_secret');
         $request = new FacebookRequest($app);
 
         $request->validateAccessToken();
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAMissingMethodWillThrow()
+    public function testAMissingMethodWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $app = new FacebookApp('123', 'foo_secret');
         $request = new FacebookRequest($app);
 
         $request->validateMethod();
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAnInvalidMethodWillThrow()
+    public function testAnInvalidMethodWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $app = new FacebookApp('123', 'foo_secret');
         $request = new FacebookRequest($app, 'foo_token', 'FOO');
 
         $request->validateMethod();
     }
 
-    public function testGetHeadersWillAutoAppendETag()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testGetHeadersWillAutoAppendETag(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
         $request = new FacebookRequest($app, null, 'GET', '/foo', [], 'fooETag');
@@ -85,7 +93,10 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedHeaders, $headers);
     }
 
-    public function testGetParamsWillAutoAppendAccessTokenAndAppSecretProof()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testGetParamsWillAutoAppendAccessTokenAndAppSecretProof(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
         $request = new FacebookRequest($app, 'foo_token', 'POST', '/foo', ['foo' => 'bar']);
@@ -99,7 +110,10 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
         ], $params);
     }
 
-    public function testAnAccessTokenCanBeSetFromTheParams()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAnAccessTokenCanBeSetFromTheParams(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
         $request = new FacebookRequest($app, null, 'POST', '/me', ['access_token' => 'bar_token']);
@@ -109,16 +123,18 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar_token', $accessToken);
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAccessTokenConflictsWillThrow()
+    public function testAccessTokenConflictsWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $app = new FacebookApp('123', 'foo_secret');
         new FacebookRequest($app, 'foo_token', 'POST', '/me', ['access_token' => 'bar_token']);
     }
 
-    public function testAProperUrlWillBeGenerated()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAProperUrlWillBeGenerated(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
         $getRequest = new FacebookRequest($app, 'foo_token', 'GET', '/foo', ['foo' => 'bar']);
@@ -137,16 +153,19 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedUrl, $postUrl);
     }
 
-    public function testAuthenticationParamsAreStrippedAndReapplied()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAuthenticationParamsAreStrippedAndReapplied(): void
     {
         $app = new FacebookApp('123', 'foo_secret');
 
         $request = new FacebookRequest(
             $app,
-            $accessToken = 'foo_token',
-            $method = 'GET',
-            $endpoint = '/foo',
-            $params = [
+            'foo_token',
+            'GET',
+            '/foo',
+            [
                 'access_token' => 'foo_token',
                 'appsecret_proof' => 'bar_app_secret',
                 'bar' => 'baz',
@@ -169,7 +188,10 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedParams, $params);
     }
 
-    public function testAFileCanBeAddedToParams()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAFileCanBeAddedToParams(): void
     {
         $myFile = new FacebookFile(__DIR__ . '/foo.txt');
         $params = [
@@ -183,11 +205,14 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($request->containsFileUploads());
         $this->assertFalse($request->containsVideoUploads());
-        $this->assertTrue(!isset($actualParams['source']));
+        $this->assertNotTrue(isset($actualParams['source']));
         $this->assertEquals('Foo Bar', $actualParams['name']);
     }
 
-    public function testAVideoCanBeAddedToParams()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAVideoCanBeAddedToParams(): void
     {
         $myFile = new FacebookVideo(__DIR__ . '/foo.txt');
         $params = [
@@ -201,7 +226,7 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($request->containsFileUploads());
         $this->assertTrue($request->containsVideoUploads());
-        $this->assertTrue(!isset($actualParams['source']));
+        $this->assertNotTrue(isset($actualParams['source']));
         $this->assertEquals('Foo Bar', $actualParams['name']);
     }
 }

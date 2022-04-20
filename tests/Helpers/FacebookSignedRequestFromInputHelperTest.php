@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,30 +23,36 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Helpers;
 
+use Facebook\Authentication\AccessToken;
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use Facebook\Tests\Fixtures\FooSignedRequestHelper;
 use Facebook\Tests\Fixtures\FooSignedRequestHelperFacebookClient;
+use JsonException;
+use PHPUnit\Framework\TestCase;
 
-class FacebookSignedRequestFromInputHelperTest extends \PHPUnit_Framework_TestCase
+class FacebookSignedRequestFromInputHelperTest extends TestCase
 {
+    protected FooSignedRequestHelper $helper;
+
+    public string $rawSignedRequestAuthorizedWithAccessToken = 'vdZXlVEQ5NTRRTFvJ7Jeo_kP4SKnBDvbNP0fEYKS0Sg=.eyJvYXV0aF90b2tlbiI6ImZvb190b2tlbiIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNDAyNTUxMDMxLCJ1c2VyX2lkIjoiMTIzIn0=';
+    public string $rawSignedRequestAuthorizedWithCode = 'oBtmZlsFguNQvGRETDYQQu1-PhwcArgbBBEK4urbpRA=.eyJjb2RlIjoiZm9vX2NvZGUiLCJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImlzc3VlZF9hdCI6MTQwNjMxMDc1MiwidXNlcl9pZCI6IjEyMyJ9';
+    public string $rawSignedRequestUnauthorized = 'KPlyhz-whtYAhHWr15N5TkbS_avz-2rUJFpFkfXKC88=.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImlzc3VlZF9hdCI6MTQwMjU1MTA4Nn0=';
+
     /**
-     * @var FooSignedRequestHelper
+     * @throws FacebookSDKException
+     * @throws JsonException
      */
-    protected $helper;
-
-    public $rawSignedRequestAuthorizedWithAccessToken = 'vdZXlVEQ5NTRRTFvJ7Jeo_kP4SKnBDvbNP0fEYKS0Sg=.eyJvYXV0aF90b2tlbiI6ImZvb190b2tlbiIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNDAyNTUxMDMxLCJ1c2VyX2lkIjoiMTIzIn0=';
-    public $rawSignedRequestAuthorizedWithCode = 'oBtmZlsFguNQvGRETDYQQu1-PhwcArgbBBEK4urbpRA=.eyJjb2RlIjoiZm9vX2NvZGUiLCJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImlzc3VlZF9hdCI6MTQwNjMxMDc1MiwidXNlcl9pZCI6IjEyMyJ9';
-    public $rawSignedRequestUnauthorized = 'KPlyhz-whtYAhHWr15N5TkbS_avz-2rUJFpFkfXKC88=.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImlzc3VlZF9hdCI6MTQwMjU1MTA4Nn0=';
-
-    protected function setUp()
+    protected function setUp(): void
     {
         $app = new FacebookApp('123', 'foo_app_secret');
         $this->helper = new FooSignedRequestHelper($app, new FooSignedRequestHelperFacebookClient());
     }
 
-    public function testSignedRequestDataCanBeRetrievedFromPostData()
+    public function testSignedRequestDataCanBeRetrievedFromPostData(): void
     {
         $_POST['signed_request'] = 'foo_signed_request';
 
@@ -53,7 +61,7 @@ class FacebookSignedRequestFromInputHelperTest extends \PHPUnit_Framework_TestCa
         $this->assertEquals('foo_signed_request', $rawSignedRequest);
     }
 
-    public function testSignedRequestDataCanBeRetrievedFromCookieData()
+    public function testSignedRequestDataCanBeRetrievedFromCookieData(): void
     {
         $_COOKIE['fbsr_123'] = 'foo_signed_request';
 
@@ -62,7 +70,11 @@ class FacebookSignedRequestFromInputHelperTest extends \PHPUnit_Framework_TestCa
         $this->assertEquals('foo_signed_request', $rawSignedRequest);
     }
 
-    public function testAccessTokenWillBeNullWhenAUserHasNotYetAuthorizedTheApp()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testAccessTokenWillBeNullWhenAUserHasNotYetAuthorizedTheApp(): void
     {
         $this->helper->instantiateSignedRequest($this->rawSignedRequestUnauthorized);
         $accessToken = $this->helper->getAccessToken();
@@ -70,21 +82,29 @@ class FacebookSignedRequestFromInputHelperTest extends \PHPUnit_Framework_TestCa
         $this->assertNull($accessToken);
     }
 
-    public function testAnAccessTokenCanBeInstantiatedWhenRedirectReturnsAnAccessToken()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testAnAccessTokenCanBeInstantiatedWhenRedirectReturnsAnAccessToken(): void
     {
         $this->helper->instantiateSignedRequest($this->rawSignedRequestAuthorizedWithAccessToken);
         $accessToken = $this->helper->getAccessToken();
 
-        $this->assertInstanceOf('Facebook\Authentication\AccessToken', $accessToken);
+        $this->assertInstanceOf(AccessToken::class, $accessToken);
         $this->assertEquals('foo_token', $accessToken->getValue());
     }
 
-    public function testAnAccessTokenCanBeInstantiatedWhenRedirectReturnsACode()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testAnAccessTokenCanBeInstantiatedWhenRedirectReturnsACode(): void
     {
         $this->helper->instantiateSignedRequest($this->rawSignedRequestAuthorizedWithCode);
         $accessToken = $this->helper->getAccessToken();
 
-        $this->assertInstanceOf('Facebook\Authentication\AccessToken', $accessToken);
+        $this->assertInstanceOf(AccessToken::class, $accessToken);
         $this->assertEquals('foo_access_token_from:foo_code', $accessToken->getValue());
     }
 }

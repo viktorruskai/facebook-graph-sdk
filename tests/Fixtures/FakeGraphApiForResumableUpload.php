@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -26,42 +28,48 @@ namespace Facebook\Tests\Fixtures;
 
 use Facebook\Http\GraphRawResponse;
 use Facebook\HttpClients\FacebookHttpClientInterface;
+use JsonException;
 
 class FakeGraphApiForResumableUpload implements FacebookHttpClientInterface
 {
-    public $transferCount = 0;
-    private $respondWith = 'SUCCESS';
+    public int $transferCount = 0;
+    private string $respondWith = 'SUCCESS';
 
-    public function failOnStart()
+    public function failOnStart(): void
     {
         $this->respondWith = 'FAIL_ON_START';
     }
 
-    public function failOnTransfer()
+    public function failOnTransfer(): void
     {
         $this->respondWith = 'FAIL_ON_TRANSFER';
     }
 
-    public function failOnTransferAndUploadNewChunk()
+    public function failOnTransferAndUploadNewChunk(): void
     {
         $this->respondWith = 'FAIL_ON_TRANSFER_AND_UPLOAD_NEW_CHUNK';
     }
 
-    public function send($url, $method, $body, array $headers, $timeOut)
+    /**
+     * @throws JsonException
+     */
+    public function send(string $url, string $method, string $body, array $headers, int $timeOut): GraphRawResponse
     {
         // Could be start, transfer or finish
-        if (strpos($body, 'transfer') !== false) {
+        if (str_contains($body, 'transfer')) {
             return $this->respondTransfer();
-        } elseif (strpos($body, 'finish') !== false) {
+        }
+
+        if (str_contains($body, 'finish')) {
             return $this->respondFinish();
         }
 
         return $this->respondStart();
     }
 
-    private function respondStart()
+    private function respondStart(): GraphRawResponse
     {
-        if ($this->respondWith == 'FAIL_ON_START') {
+        if ($this->respondWith === 'FAIL_ON_START') {
             return new GraphRawResponse(
                 "HTTP/1.1 500 OK\r\nFoo: Bar",
                 '{"error":{"message":"Error validating access token: Session has expired on Monday, ' .
@@ -76,9 +84,12 @@ class FakeGraphApiForResumableUpload implements FacebookHttpClientInterface
         );
     }
 
-    private function respondTransfer()
+    /**
+     * @throws JsonException
+     */
+    private function respondTransfer(): GraphRawResponse
     {
-        if ($this->respondWith == 'FAIL_ON_TRANSFER') {
+        if ($this->respondWith === 'FAIL_ON_TRANSFER') {
             return new GraphRawResponse(
                 "HTTP/1.1 500 OK\r\nFoo: Bar",
                 '{"error":{"message":"There was a problem uploading your video. Please try uploading it again.",' .
@@ -86,7 +97,7 @@ class FakeGraphApiForResumableUpload implements FacebookHttpClientInterface
             );
         }
 
-        if ($this->respondWith == 'FAIL_ON_TRANSFER_AND_UPLOAD_NEW_CHUNK') {
+        if ($this->respondWith === 'FAIL_ON_TRANSFER_AND_UPLOAD_NEW_CHUNK') {
             return new GraphRawResponse(
                 "HTTP/1.1 500 OK\r\nFoo: Bar",
                 '{"error":{"message":"There was a problem uploading your video. Please try uploading it again.",' .
@@ -95,27 +106,21 @@ class FakeGraphApiForResumableUpload implements FacebookHttpClientInterface
             );
         }
 
-        switch ($this->transferCount) {
-            case 0:
-                $data = ['start_offset' => 20, 'end_offset' => 40];
-                break;
-            case 1:
-                $data = ['start_offset' => 40, 'end_offset' => 50];
-                break;
-            default:
-                $data = ['start_offset' => 50, 'end_offset' => 50];
-                break;
-        }
+        $data = match ($this->transferCount) {
+            0 => ['start_offset' => 20, 'end_offset' => 40],
+            1 => ['start_offset' => 40, 'end_offset' => 50],
+            default => ['start_offset' => 50, 'end_offset' => 50],
+        };
 
         $this->transferCount++;
 
         return new GraphRawResponse(
             "HTTP/1.1 200 OK\r\nFoo: Bar",
-            json_encode($data)
+            json_encode($data, JSON_THROW_ON_ERROR)
         );
     }
 
-    private function respondFinish()
+    private function respondFinish(): GraphRawResponse
     {
         return new GraphRawResponse(
             "HTTP/1.1 200 OK\r\nFoo: Bar",

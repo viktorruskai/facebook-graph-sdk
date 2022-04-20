@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -24,10 +26,11 @@
 namespace Facebook\Tests\PersistentData;
 
 use Facebook\PersistentData\FacebookMemoryPersistentDataHandler;
+use PHPUnit\Framework\TestCase;
 
-class FacebookMemoryPersistentDataHandlerTest extends \PHPUnit_Framework_TestCase
+class FacebookMemoryPersistentDataHandlerTest extends TestCase
 {
-    public function testCanGetAndSetAVirtualValue()
+    public function testCanGetAndSetAVirtualValue(): void
     {
         $handler = new FacebookMemoryPersistentDataHandler();
         $handler->set('foo', 'bar');
@@ -36,7 +39,7 @@ class FacebookMemoryPersistentDataHandlerTest extends \PHPUnit_Framework_TestCas
         $this->assertEquals('bar', $value);
     }
 
-    public function testGettingAValueThatDoesntExistWillReturnNull()
+    public function testGettingAValueThatDoesntExistWillReturnNull(): void
     {
         $handler = new FacebookMemoryPersistentDataHandler();
         $value = $handler->get('does_not_exist');

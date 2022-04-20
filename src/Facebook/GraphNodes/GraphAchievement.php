@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,7 +23,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
+
+use DateTime;
 
 /**
  * Class GraphAchievement
@@ -33,47 +38,39 @@ class GraphAchievement extends GraphNode
     /**
      * @var array Maps object key names to Graph object types.
      */
-    protected static $graphObjectMap = [
-        'from' => '\Facebook\GraphNodes\GraphUser',
-        'application' => '\Facebook\GraphNodes\GraphApplication',
+    protected static array $graphObjectMap = [
+        'from' => GraphUser::class,
+        'application' => GraphApplication::class,
     ];
 
     /**
      * Returns the ID for the achievement.
-     *
-     * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->getField('id');
     }
 
     /**
      * Returns the user who achieved this.
-     *
-     * @return GraphUser|null
      */
-    public function getFrom()
+    public function getFrom(): ?GraphUser
     {
         return $this->getField('from');
     }
 
     /**
      * Returns the time at which this was achieved.
-     *
-     * @return \DateTime|null
      */
-    public function getPublishTime()
+    public function getPublishTime(): ?DateTime
     {
         return $this->getField('publish_time');
     }
 
     /**
      * Returns the app in which the user achieved this.
-     *
-     * @return GraphApplication|null
      */
-    public function getApplication()
+    public function getApplication(): ?GraphApplication
     {
         return $this->getField('application');
     }
@@ -81,9 +78,9 @@ class GraphAchievement extends GraphNode
     /**
      * Returns information about the achievement type this instance is connected with.
      *
-     * @return array|null
+     * @noinspection PhpUnused
      */
-    public function getData()
+    public function getData(): ?array
     {
         return $this->getField('data');
     }
@@ -92,20 +89,16 @@ class GraphAchievement extends GraphNode
      * Returns the type of achievement.
      *
      * @see https://developers.facebook.com/docs/graph-api/reference/achievement
-     *
-     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return 'game.achievement';
     }
 
     /**
      * Indicates whether gaining the achievement published a feed story for the user.
-     *
-     * @return boolean|null
      */
-    public function isNoFeedStory()
+    public function isNoFeedStory(): ?bool
     {
         return $this->getField('no_feed_story');
     }

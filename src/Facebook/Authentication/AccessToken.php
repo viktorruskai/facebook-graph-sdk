@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,7 +23,11 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Authentication;
+
+use DateTime;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class AccessToken
@@ -32,25 +38,18 @@ class AccessToken
 {
     /**
      * The access token value.
-     *
-     * @var string
      */
-    protected $value = '';
+    protected string $value = '';
 
     /**
      * Date when token expires.
-     *
-     * @var \DateTime|null
      */
-    protected $expiresAt;
+    protected ?DateTime $expiresAt;
 
     /**
      * Create a new access token entity.
-     *
-     * @param string $accessToken
-     * @param int    $expiresAt
      */
-    public function __construct($accessToken, $expiresAt = 0)
+    public function __construct(string $accessToken, int $expiresAt = 0)
     {
         $this->value = $accessToken;
         if ($expiresAt) {
@@ -60,42 +59,32 @@ class AccessToken
 
     /**
      * Generate an app secret proof to sign a request to Graph.
-     *
-     * @param string $appSecret The app secret.
-     *
-     * @return string
      */
-    public function getAppSecretProof($appSecret)
+    public function getAppSecretProof(string $appSecret): string
     {
         return hash_hmac('sha256', $this->value, $appSecret);
     }
 
     /**
      * Getter for expiresAt.
-     *
-     * @return \DateTime|null
      */
-    public function getExpiresAt()
+    public function getExpiresAt(): ?DateTime
     {
         return $this->expiresAt;
     }
 
     /**
      * Determines whether or not this is an app access token.
-     *
-     * @return bool
      */
-    public function isAppAccessToken()
+    public function isAppAccessToken(): bool
     {
-        return strpos($this->value, '|') !== false;
+        return str_contains($this->value, '|');
     }
 
     /**
      * Determines whether or not this is a long-lived token.
-     *
-     * @return bool
      */
-    public function isLongLived()
+    public function isLongLived(): bool
     {
         if ($this->expiresAt) {
             return $this->expiresAt->getTimestamp() > time() + (60 * 60 * 2);
@@ -110,12 +99,10 @@ class AccessToken
 
     /**
      * Checks the expiration of the access token.
-     *
-     * @return boolean|null
      */
-    public function isExpired()
+    public function isExpired(): ?bool
     {
-        if ($this->getExpiresAt() instanceof \DateTime) {
+        if ($this->getExpiresAt() instanceof DateTime) {
             return $this->getExpiresAt()->getTimestamp() < time();
         }
 
@@ -128,20 +115,17 @@ class AccessToken
 
     /**
      * Returns the access token as a string.
-     *
-     * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
     /**
      * Returns the access token as a string.
-     *
-     * @return string
      */
-    public function __toString()
+    #[Pure]
+    public function __toString(): string
     {
         return $this->getValue();
     }
@@ -151,9 +135,9 @@ class AccessToken
      *
      * @param int $timeStamp
      */
-    protected function setExpiresAtFromTimeStamp($timeStamp)
+    protected function setExpiresAtFromTimeStamp(int $timeStamp): void
     {
-        $dt = new \DateTime();
+        $dt = new DateTime();
         $dt->setTimestamp($timeStamp);
         $this->expiresAt = $dt;
     }

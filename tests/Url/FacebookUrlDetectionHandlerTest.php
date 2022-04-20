@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,14 +23,17 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Url;
 
 use Facebook\Url\FacebookUrlDetectionHandler;
+use PHPUnit\Framework\TestCase;
 
-class FacebookUrlDetectionHandlerTest extends \PHPUnit_Framework_TestCase
+class FacebookUrlDetectionHandlerTest extends TestCase
 {
-    public function testProperlyGeneratesUrlFromCommonScenario()
+    public function testProperlyGeneratesUrlFromCommonScenario(): void
     {
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $_SERVER = [
             'HTTP_HOST' => 'foo.bar',
             'SERVER_PORT' => '80',
@@ -41,8 +46,9 @@ class FacebookUrlDetectionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://foo.bar/baz?foo=123', $currentUri);
     }
 
-    public function testProperlyGeneratesSecureUrlFromCommonScenario()
+    public function testProperlyGeneratesSecureUrlFromCommonScenario(): void
     {
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $_SERVER = [
             'HTTP_HOST' => 'foo.bar',
             'SERVER_PORT' => '443',
@@ -55,8 +61,9 @@ class FacebookUrlDetectionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https://foo.bar/baz?foo=123', $currentUri);
     }
 
-    public function testProperlyGeneratesUrlFromProxy()
+    public function testProperlyGeneratesUrlFromProxy(): void
     {
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $_SERVER = [
             'HTTP_X_FORWARDED_PORT' => '80',
             'HTTP_X_FORWARDED_PROTO' => 'http',
@@ -71,8 +78,9 @@ class FacebookUrlDetectionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://foo.bar/baz?foo=123', $currentUri);
     }
 
-    public function testProperlyGeneratesSecureUrlFromProxy()
+    public function testProperlyGeneratesSecureUrlFromProxy(): void
     {
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $_SERVER = [
             'HTTP_X_FORWARDED_PORT' => '443',
             'HTTP_X_FORWARDED_PROTO' => 'https',
@@ -87,8 +95,9 @@ class FacebookUrlDetectionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https://foo.bar/baz?foo=123', $currentUri);
     }
 
-    public function testProperlyGeneratesUrlWithCustomPort()
+    public function testProperlyGeneratesUrlWithCustomPort(): void
     {
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $_SERVER = [
             'HTTP_HOST' => 'foo.bar',
             'SERVER_PORT' => '1337',
@@ -101,8 +110,9 @@ class FacebookUrlDetectionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://foo.bar:1337/foo.php', $currentUri);
     }
 
-    public function testProperlyGeneratesSecureUrlWithCustomPort()
+    public function testProperlyGeneratesSecureUrlWithCustomPort(): void
     {
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $_SERVER = [
             'HTTP_HOST' => 'foo.bar',
             'SERVER_PORT' => '1337',
@@ -116,8 +126,9 @@ class FacebookUrlDetectionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https://foo.bar:1337/foo.php', $currentUri);
     }
 
-    public function testProperlyGeneratesUrlWithCustomPortFromProxy()
+    public function testProperlyGeneratesUrlWithCustomPortFromProxy(): void
     {
+        /** @noinspection PhpArrayWriteIsNotUsedInspection */
         $_SERVER = [
             'HTTP_X_FORWARDED_PORT' => '8888',
             'HTTP_X_FORWARDED_PROTO' => 'http',

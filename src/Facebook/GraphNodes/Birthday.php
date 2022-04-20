@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,9 +23,11 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 use DateTime;
+use Exception;
 
 /**
  * Birthday object to handle various Graph return formats
@@ -32,15 +36,9 @@ use DateTime;
  */
 class Birthday extends DateTime
 {
-    /**
-     * @var bool
-     */
-    private $hasDate = false;
 
-    /**
-     * @var bool
-     */
-    private $hasYear = false;
+    private bool $hasDate;
+    private bool $hasYear;
 
     /**
      * Parses Graph birthday format to set indication flags, possible values:
@@ -51,9 +49,9 @@ class Birthday extends DateTime
      *
      * @link https://developers.facebook.com/docs/graph-api/reference/user
      *
-     * @param string $date
+     * @throws Exception
      */
-    public function __construct($date)
+    public function __construct(string $date)
     {
         $parts = explode('/', $date);
 
@@ -64,21 +62,17 @@ class Birthday extends DateTime
     }
 
     /**
-     * Returns whether date object contains birth day and month
-     *
-     * @return bool
+     * Returns whether date object contains birthday and month
      */
-    public function hasDate()
+    public function hasDate(): bool
     {
         return $this->hasDate;
     }
 
     /**
      * Returns whether date object contains birth year
-     *
-     * @return bool
      */
-    public function hasYear()
+    public function hasYear(): bool
     {
         return $this->hasYear;
     }

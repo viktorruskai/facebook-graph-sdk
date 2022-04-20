@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 /**
@@ -33,9 +36,9 @@ class GraphLocation extends GraphNode
     /**
      * Returns the street component of the location
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getStreet()
+    public function getStreet(): ?string
     {
         return $this->getField('street');
     }
@@ -43,19 +46,17 @@ class GraphLocation extends GraphNode
     /**
      * Returns the city component of the location
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->getField('city');
     }
 
     /**
      * Returns the state component of the location
-     *
-     * @return string|null
      */
-    public function getState()
+    public function getState(): ?string
     {
         return $this->getField('state');
     }
@@ -63,9 +64,9 @@ class GraphLocation extends GraphNode
     /**
      * Returns the country component of the location
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->getField('country');
     }
@@ -73,9 +74,9 @@ class GraphLocation extends GraphNode
     /**
      * Returns the zipcode component of the location
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getZip()
+    public function getZip(): ?string
     {
         return $this->getField('zip');
     }
@@ -83,9 +84,9 @@ class GraphLocation extends GraphNode
     /**
      * Returns the latitude component of the location
      *
-     * @return float|null
+     * @noinspection PhpUnused
      */
-    public function getLatitude()
+    public function getLatitude(): ?float
     {
         return $this->getField('latitude');
     }
@@ -93,9 +94,9 @@ class GraphLocation extends GraphNode
     /**
      * Returns the street component of the location
      *
-     * @return float|null
+     * @noinspection PhpUnused
      */
-    public function getLongitude()
+    public function getLongitude(): ?float
     {
         return $this->getField('longitude');
     }

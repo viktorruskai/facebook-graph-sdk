@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,14 +23,16 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Authentication;
 
 use Facebook\Authentication\AccessToken;
+use PHPUnit\Framework\TestCase;
 
-class AccessTokenTest extends \PHPUnit_Framework_TestCase
+class AccessTokenTest extends TestCase
 {
 
-    public function testAnAccessTokenCanBeReturnedAsAString()
+    public function testAnAccessTokenCanBeReturnedAsAString(): void
     {
         $accessToken = new AccessToken('foo_token');
 
@@ -36,7 +40,7 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo_token', (string)$accessToken);
     }
 
-    public function testAnAppSecretProofWillBeProperlyGenerated()
+    public function testAnAppSecretProofWillBeProperlyGenerated(): void
     {
         $accessToken = new AccessToken('foo_token');
 
@@ -45,7 +49,7 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('796ba0d8a6b339e476a7b166a9e8ac0a395f7de736dc37de5f2f4397f5854eb8', $appSecretProof);
     }
 
-    public function testAnAppAccessTokenCanBeDetected()
+    public function testAnAppAccessTokenCanBeDetected(): void
     {
         $normalToken = new AccessToken('foo_token');
         $isNormalToken = $normalToken->isAppAccessToken();
@@ -58,17 +62,17 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($isAppToken, 'App access token expected to look like an app access token.');
     }
 
-    public function testShortLivedAccessTokensCanBeDetected()
+    public function testShortLivedAccessTokensCanBeDetected(): void
     {
         $anHourAndAHalf = time() + (1.5 * 60);
-        $accessToken = new AccessToken('foo_token', $anHourAndAHalf);
+        $accessToken = new AccessToken('foo_token', (int)$anHourAndAHalf);
 
         $isLongLived = $accessToken->isLongLived();
 
         $this->assertFalse($isLongLived, 'Expected access token to be short lived.');
     }
 
-    public function testLongLivedAccessTokensCanBeDetected()
+    public function testLongLivedAccessTokensCanBeDetected(): void
     {
         $accessToken = new AccessToken('foo_token', $this->aWeekFromNow());
 
@@ -77,15 +81,15 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($isLongLived, 'Expected access token to be long lived.');
     }
 
-    public function testAnAppAccessTokenDoesNotExpire()
+    public function testAnAppAccessTokenDoesNotExpire(): void
     {
-        $appToken = new AccessToken('123|secret');
+        $appToken = new AccessToken('123|secret', $this->aWeekFromNow());
         $hasExpired = $appToken->isExpired();
 
         $this->assertFalse($hasExpired, 'App access token not expected to expire.');
     }
 
-    public function testAnAccessTokenCanExpire()
+    public function testAnAccessTokenCanExpire(): void
     {
         $expireTime = time() - 100;
         $appToken = new AccessToken('foo_token', $expireTime);
@@ -94,9 +98,9 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($hasExpired, 'Expected 100 second old access token to be expired.');
     }
 
-    public function testAccessTokenCanBeSerialized()
+    public function testAccessTokenCanBeSerialized(): void
     {
-        $accessToken = new AccessToken('foo', time(), 'bar');
+        $accessToken = new AccessToken('foo', time());
 
         $newAccessToken = unserialize(serialize($accessToken));
 
@@ -104,8 +108,8 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($accessToken->getExpiresAt(), $newAccessToken->getExpiresAt());
     }
 
-    private function aWeekFromNow()
+    private function aWeekFromNow(): float|int
     {
-        return time() + (60 * 60 * 24 * 7);//a week from now
+        return time() + (60 * 60 * 24 * 7); //a week from now
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,26 +23,30 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\PseudoRandomString;
 
 use Facebook\Tests\Fixtures\MyFooBarPseudoRandomStringGenerator;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use TypeError;
 
-class PseudoRandomStringGeneratorTraitTest extends \PHPUnit_Framework_TestCase
+class PseudoRandomStringGeneratorTraitTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testAnInvalidLengthWillThrow()
+    public function testAnInvalidLengthWillThrow(): void
     {
+        $this->expectException(TypeError::class);
+
         $prsg = new MyFooBarPseudoRandomStringGenerator();
+
+        /** @noinspection PhpStrictTypeCheckingInspection */
         $prsg->validateLength('foo_len');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testALengthThatIsNotAtLeastOneCharacterWillThrow()
+    public function testALengthThatIsNotAtLeastOneCharacterWillThrow(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $prsg = new MyFooBarPseudoRandomStringGenerator();
         $prsg->validateLength(0);
     }

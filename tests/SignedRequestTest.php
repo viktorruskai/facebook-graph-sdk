@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,22 +23,22 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookApp;
 use Facebook\SignedRequest;
+use JsonException;
+use PHPUnit\Framework\TestCase;
 
-class SignedRequestTest extends \PHPUnit_Framework_TestCase
+class SignedRequestTest extends TestCase
 {
-    /**
-     * @var FacebookApp
-     */
-    protected $app;
+    protected FacebookApp $app;
+    protected string $rawSignature = 'U0_O1MqqNKUt32633zAkdd2Ce-jGVgRgJeRauyx_zC8=';
+    protected string $rawPayload = 'eyJvYXV0aF90b2tlbiI6ImZvb190b2tlbiIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjozMjEsImNvZGUiOiJmb29fY29kZSIsInN0YXRlIjoiZm9vX3N0YXRlIiwidXNlcl9pZCI6MTIzLCJmb28iOiJiYXIifQ==';
 
-    protected $rawSignature = 'U0_O1MqqNKUt32633zAkdd2Ce-jGVgRgJeRauyx_zC8=';
-    protected $rawPayload = 'eyJvYXV0aF90b2tlbiI6ImZvb190b2tlbiIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjozMjEsImNvZGUiOiJmb29fY29kZSIsInN0YXRlIjoiZm9vX3N0YXRlIiwidXNlcl9pZCI6MTIzLCJmb28iOiJiYXIifQ==';
-
-    protected $payloadData = [
+    protected array $payloadData = [
         'oauth_token' => 'foo_token',
         'algorithm' => 'HMAC-SHA256',
         'issued_at' => 321,
@@ -46,12 +48,16 @@ class SignedRequestTest extends \PHPUnit_Framework_TestCase
         'foo' => 'bar',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = new FacebookApp('123', 'foo_app_secret');
     }
 
-    public function testAValidSignedRequestCanBeCreated()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testAValidSignedRequestCanBeCreated(): void
     {
         $sr = new SignedRequest($this->app);
         $rawSignedRequest = $sr->make($this->payloadData);
@@ -65,14 +71,21 @@ class SignedRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
+     *
+     * @throws JsonException
      */
-    public function testInvalidSignedRequestsWillFailFormattingValidation()
+    public function testInvalidSignedRequestsWillFailFormattingValidation(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         new SignedRequest($this->app, 'invalid_signed_request');
     }
 
-    public function testBase64EncodingIsUrlSafe()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testBase64EncodingIsUrlSafe(): void
     {
         $sr = new SignedRequest($this->app);
         $encodedData = $sr->base64UrlEncode('aijkoprstADIJKLOPQTUVX1256!)]-:;"<>?.|~');
@@ -80,7 +93,11 @@ class SignedRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('YWlqa29wcnN0QURJSktMT1BRVFVWWDEyNTYhKV0tOjsiPD4_Lnx-', $encodedData);
     }
 
-    public function testAUrlSafeBase64EncodedStringCanBeDecoded()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testAUrlSafeBase64EncodedStringCanBeDecoded(): void
     {
         $sr = new SignedRequest($this->app);
         $decodedData = $sr->base64UrlDecode('YWlqa29wcnN0QURJSktMT1BRVFVWWDEyNTYhKV0tOjsiPD4/Lnx+');
@@ -89,26 +106,34 @@ class SignedRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
+     *
+     * @throws JsonException
      */
-    public function testAnImproperlyEncodedSignatureWillThrowAnException()
+    public function testAnImproperlyEncodedSignatureWillThrowAnException(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         new SignedRequest($this->app, 'foo_sig.' . $this->rawPayload);
     }
 
     /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
+     *
+     * @throws JsonException
      */
-    public function testAnImproperlyEncodedPayloadWillThrowAnException()
+    public function testAnImproperlyEncodedPayloadWillThrowAnException(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         new SignedRequest($this->app, $this->rawSignature . '.foo_payload');
     }
 
     /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
+     * @throws JsonException
      */
-    public function testNonApprovedAlgorithmsWillThrowAnException()
+    public function testNonApprovedAlgorithmsWillThrowAnException(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $signedRequestData = $this->payloadData;
         $signedRequestData['algorithm'] = 'FOO-ALGORITHM';
 
@@ -118,7 +143,11 @@ class SignedRequestTest extends \PHPUnit_Framework_TestCase
         new SignedRequest($this->app, $rawSignedRequest);
     }
 
-    public function testAsRawSignedRequestCanBeValidatedAndDecoded()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testAsRawSignedRequestCanBeValidatedAndDecoded(): void
     {
         $rawSignedRequest = $this->rawSignature . '.' . $this->rawPayload;
         $sr = new SignedRequest($this->app, $rawSignedRequest);
@@ -126,7 +155,11 @@ class SignedRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->payloadData, $sr->getPayload());
     }
 
-    public function testARawSignedRequestCanBeValidatedAndDecoded()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testARawSignedRequestCanBeValidatedAndDecoded(): void
     {
         $rawSignedRequest = $this->rawSignature . '.' . $this->rawPayload;
         $sr = new SignedRequest($this->app, $rawSignedRequest);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 /**
@@ -32,40 +35,32 @@ class GraphPicture extends GraphNode
 {
     /**
      * Returns true if user picture is silhouette.
-     *
-     * @return bool|null
      */
-    public function isSilhouette()
+    public function isSilhouette(): ?bool
     {
         return $this->getField('is_silhouette');
     }
 
     /**
      * Returns the url of user picture if it exists
-     *
-     * @return string|null
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->getField('url');
     }
 
     /**
      * Returns the width of user picture if it exists
-     *
-     * @return int|null
      */
-    public function getWidth()
+    public function getWidth(): ?int
     {
         return $this->getField('width');
     }
 
     /**
      * Returns the height of user picture if it exists
-     *
-     * @return int|null
      */
-    public function getHeight()
+    public function getHeight(): ?int
     {
         return $this->getField('height');
     }

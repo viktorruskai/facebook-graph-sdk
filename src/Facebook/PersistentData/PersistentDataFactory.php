@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\PersistentData;
 
 use InvalidArgumentException;
@@ -35,13 +38,10 @@ class PersistentDataFactory
     /**
      * PersistentData generation.
      *
-     * @param PersistentDataInterface|string|null $handler
-     *
      * @throws InvalidArgumentException If the persistent data handler isn't "session", "memory", or an instance of Facebook\PersistentData\PersistentDataInterface.
      *
-     * @return PersistentDataInterface
      */
-    public static function createPersistentDataHandler($handler)
+    public static function createPersistentDataHandler(PersistentDataInterface|string|null $handler): FacebookMemoryPersistentDataHandler|FacebookSessionPersistentDataHandler|PersistentDataInterface
     {
         if (!$handler) {
             return session_status() === PHP_SESSION_ACTIVE

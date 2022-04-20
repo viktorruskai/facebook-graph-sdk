@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -27,7 +29,7 @@ use Facebook\Url\UrlDetectionInterface;
 
 class FooUrlDetectionInterface implements UrlDetectionInterface
 {
-    public function getCurrentUrl()
+    public function getCurrentUrl(): string
     {
         return 'https://foo.bar';
     }

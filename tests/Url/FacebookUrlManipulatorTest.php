@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,16 +23,19 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Url;
 
 use Facebook\Url\FacebookUrlManipulator;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
+class FacebookUrlManipulatorTest extends TestCase
 {
     /**
      * @dataProvider provideUris
      */
-    public function testParamsGetRemovedFromAUrl($dirtyUrl, $expectedCleanUrl)
+    public function testParamsGetRemovedFromAUrl(string $dirtyUrl, string $expectedCleanUrl): void
     {
         $removeParams = [
             'state',
@@ -44,7 +49,7 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedCleanUrl, $currentUri);
     }
 
-    public function provideUris()
+    public function provideUris(): array
     {
         return [
             [
@@ -90,7 +95,7 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testGracefullyHandlesUrlAppending()
+    public function testGracefullyHandlesUrlAppending(): void
     {
         $params = [];
         $url = 'https://www.foo.com/';
@@ -100,7 +105,7 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
         $params = [
             'access_token' => 'foo',
         ];
-        $url = 'https://www.foo.com/';
+//        $url = 'https://www.foo.com/';
         $processed_url = FacebookUrlManipulator::appendParamsToUrl($url, $params);
         $this->assertEquals('https://www.foo.com/?access_token=foo', $processed_url);
 
@@ -120,7 +125,7 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https://www.foo.com/?access_token=bar&foo=bar', $processed_url);
     }
 
-    public function testSlashesAreProperlyPrepended()
+    public function testSlashesAreProperlyPrepended(): void
     {
         $slashTestOne = FacebookUrlManipulator::forceSlashPrefix('foo');
         $slashTestTwo = FacebookUrlManipulator::forceSlashPrefix('/foo');
@@ -137,7 +142,7 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $slashTestSix);
     }
 
-    public function testParamsCanBeReturnedAsArray()
+    public function testParamsCanBeReturnedAsArray(): void
     {
         $paramsOne = FacebookUrlManipulator::getParamsAsArray('/foo');
         $paramsTwo = FacebookUrlManipulator::getParamsAsArray('/foo?one=1&two=2');
@@ -155,14 +160,14 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideMergableEndpoints
      */
-    public function testParamsCanBeMergedOntoUrlProperly($urlOne, $urlTwo, $expected)
+    public function testParamsCanBeMergedOntoUrlProperly(string $urlOne, string $urlTwo, string $expected): void
     {
         $result = FacebookUrlManipulator::mergeUrlParams($urlOne, $urlTwo);
 
         $this->assertEquals($result, $expected);
     }
 
-    public function provideMergableEndpoints()
+    public function provideMergableEndpoints(): array
     {
         return [
             [
@@ -188,7 +193,7 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testGraphUrlsCanBeTrimmed()
+    public function testGraphUrlsCanBeTrimmed(): void
     {
         $fullGraphUrl = 'https://graph.facebook.com/';
         $baseGraphUrl = FacebookUrlManipulator::baseGraphUrlEndpoint($fullGraphUrl);
@@ -213,5 +218,6 @@ class FacebookUrlManipulatorTest extends \PHPUnit_Framework_TestCase
         $fullGraphUrl = 'https://graph.facebook.com/v5.301/1233?foo=bar';
         $baseGraphUrl = FacebookUrlManipulator::baseGraphUrlEndpoint($fullGraphUrl);
         $this->assertEquals('/1233?foo=bar', $baseGraphUrl);
+        Mockery::close();
     }
 }

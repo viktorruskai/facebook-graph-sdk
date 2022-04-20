@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -27,7 +29,7 @@ use Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface;
 
 class FooPseudoRandomStringGenerator implements PseudoRandomStringGeneratorInterface
 {
-    public function getPseudoRandomString($length)
+    public function getPseudoRandomString(int $length): string
     {
         return 'csprs123';
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
 
 /**
@@ -32,20 +35,18 @@ class GraphCoverPhoto extends GraphNode
 {
     /**
      * Returns the id of cover if it exists
-     *
-     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->getField('id');
     }
-    
+
     /**
      * Returns the source of cover if it exists
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getSource()
+    public function getSource(): ?string
     {
         return $this->getField('source');
     }
@@ -53,9 +54,9 @@ class GraphCoverPhoto extends GraphNode
     /**
      * Returns the offset_x of cover if it exists
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getOffsetX()
+    public function getOffsetX(): ?int
     {
         return $this->getField('offset_x');
     }
@@ -63,9 +64,9 @@ class GraphCoverPhoto extends GraphNode
     /**
      * Returns the offset_y of cover if it exists
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getOffsetY()
+    public function getOffsetY(): ?int
     {
         return $this->getField('offset_y');
     }

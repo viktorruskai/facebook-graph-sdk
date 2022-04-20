@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,25 +23,31 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
-use Mockery as m;
+use Facebook\FacebookResponse;
 use Facebook\GraphNodes\GraphNodeFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractGraphNode extends \PHPUnit_Framework_TestCase
+abstract class AbstractGraphNode extends TestCase
 {
-    /**
-     * @var \Facebook\FacebookResponse|\Mockery\MockInterface
-     */
-    protected $responseMock;
+    protected FacebookResponse $responseMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->responseMock = m::mock('\Facebook\FacebookResponse');
+        $this->responseMock = m::mock(FacebookResponse::class);
     }
 
-    protected function makeFactoryWithData($data)
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        m::close();
+    }
+
+    protected function makeFactoryWithData($data): GraphNodeFactory
     {
         $this->responseMock
             ->shouldReceive('getDecodedBody')

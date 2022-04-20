@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,25 +23,30 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookResponse;
-use Mockery as m;
 use Facebook\GraphNodes\GraphNodeFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Facebook\GraphNodes\GraphCoverPhoto;
+use Facebook\GraphNodes\GraphLocation;
 
-class GraphGroupTest extends \PHPUnit_Framework_TestCase
+class GraphGroupTest extends TestCase
 {
-    /**
-     * @var FacebookResponse
-     */
-    protected $responseMock;
+    protected FacebookResponse $responseMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->responseMock = m::mock('\Facebook\FacebookResponse');
+        $this->responseMock = m::mock(FacebookResponse::class);
     }
 
-    public function testCoverGetsCastAsGraphCoverPhoto()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCoverGetsCastAsGraphCoverPhoto(): void
     {
         $dataFromGraph = [
             'cover' => ['id' => '1337']
@@ -53,10 +60,14 @@ class GraphGroupTest extends \PHPUnit_Framework_TestCase
         $graphNode = $factory->makeGraphGroup();
 
         $cover = $graphNode->getCover();
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphCoverPhoto', $cover);
+        $this->assertInstanceOf(GraphCoverPhoto::class, $cover);
+        m::close();
     }
 
-    public function testVenueGetsCastAsGraphLocation()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testVenueGetsCastAsGraphLocation(): void
     {
         $dataFromGraph = [
             'venue' => ['id' => '1337']
@@ -70,6 +81,7 @@ class GraphGroupTest extends \PHPUnit_Framework_TestCase
         $graphNode = $factory->makeGraphGroup();
 
         $venue = $graphNode->getVenue();
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphLocation', $venue);
+        $this->assertInstanceOf(GraphLocation::class, $venue);
+        m::close();
     }
 }

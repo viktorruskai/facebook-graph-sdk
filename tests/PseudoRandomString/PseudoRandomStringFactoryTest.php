@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,37 +23,38 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\PseudoRandomString;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\PseudoRandomString\PseudoRandomStringGeneratorFactory;
-use PHPUnit_Framework_TestCase;
+use Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface;
+use PHPUnit\Framework\TestCase;
 
-class PseudoRandomStringFactoryTest extends PHPUnit_Framework_TestCase
+class PseudoRandomStringFactoryTest extends TestCase
 {
-    const COMMON_NAMESPACE = 'Facebook\PseudoRandomString\\';
-    const COMMON_INTERFACE = 'Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface';
+    public const COMMON_NAMESPACE = 'Facebook\PseudoRandomString\\';
+    public const COMMON_INTERFACE = PseudoRandomStringGeneratorInterface::class;
 
     /**
-     * @param mixed  $handler
-     * @param string $expected
-     *
      * @dataProvider csprngProvider
+     *
+     * @throws FacebookSDKException
      */
-    public function testCsprng($handler, $expected)
+    public function testCsprng(mixed $handler, string $expected): void
     {
         $pseudoRandomStringGenerator = PseudoRandomStringGeneratorFactory::createPseudoRandomStringGenerator($handler);
 
         $this->assertInstanceOf(self::COMMON_INTERFACE, $pseudoRandomStringGenerator);
+
+        /** @noinspection UnnecessaryAssertionInspection */
         $this->assertInstanceOf($expected, $pseudoRandomStringGenerator);
     }
 
-    /**
-     * @return array
-     */
-    public function csprngProvider()
+    public function csprngProvider(): array
     {
         $providers = [
-          [null, self::COMMON_INTERFACE],
+            [null, self::COMMON_INTERFACE],
         ];
         if (function_exists('random_bytes')) {
             $providers[] = ['random_bytes', self::COMMON_NAMESPACE . 'RandomBytesPseudoRandomStringGenerator'];

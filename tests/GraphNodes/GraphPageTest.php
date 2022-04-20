@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,24 +23,30 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
-use Mockery as m;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\FacebookResponse;
 use Facebook\GraphNodes\GraphNodeFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Facebook\GraphNodes\GraphPage;
+use Facebook\GraphNodes\GraphLocation;
 
-class GraphPageTest extends \PHPUnit_Framework_TestCase
+class GraphPageTest extends TestCase
 {
-    /**
-     * @var \Facebook\FacebookResponse
-     */
-    protected $responseMock;
+    protected FacebookResponse $responseMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->responseMock = m::mock('\\Facebook\\FacebookResponse');
+        $this->responseMock = m::mock(FacebookResponse::class);
     }
 
-    public function testPagePropertiesReturnGraphPageObjects()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testPagePropertiesReturnGraphPageObjects(): void
     {
         $dataFromGraph = [
             'id' => '123',
@@ -63,11 +71,15 @@ class GraphPageTest extends \PHPUnit_Framework_TestCase
         $bestPage = $graphNode->getBestPage();
         $globalBrandParentPage = $graphNode->getGlobalBrandParentPage();
 
-        $this->assertInstanceOf('\\Facebook\\GraphNodes\\GraphPage', $bestPage);
-        $this->assertInstanceOf('\\Facebook\\GraphNodes\\GraphPage', $globalBrandParentPage);
+        $this->assertInstanceOf(GraphPage::class, $bestPage);
+        $this->assertInstanceOf(GraphPage::class, $globalBrandParentPage);
+        m::close();
     }
 
-    public function testLocationPropertyWillGetCastAsGraphLocationObject()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testLocationPropertyWillGetCastAsGraphLocationObject(): void
     {
         $dataFromGraph = [
             'id' => '123',
@@ -90,6 +102,7 @@ class GraphPageTest extends \PHPUnit_Framework_TestCase
 
         $location = $graphNode->getLocation();
 
-        $this->assertInstanceOf('\\Facebook\\GraphNodes\\GraphLocation', $location);
+        $this->assertInstanceOf(GraphLocation::class, $location);
+        m::close();
     }
 }

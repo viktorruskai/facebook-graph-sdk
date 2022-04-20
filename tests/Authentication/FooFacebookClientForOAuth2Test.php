@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Authentication;
 
 use Facebook\FacebookClient;
@@ -29,24 +32,24 @@ use Facebook\FacebookResponse;
 
 class FooFacebookClientForOAuth2Test extends FacebookClient
 {
-    protected $response = '';
+    protected string $response = '';
 
-    public function setMetadataResponse()
+    public function setMetadataResponse(): void
     {
         $this->response = '{"data":{"user_id":"444"}}';
     }
 
-    public function setAccessTokenResponse()
+    public function setAccessTokenResponse(): void
     {
         $this->response = '{"access_token":"my_access_token","expires":"1422115200"}';
     }
 
-    public function setCodeResponse()
+    public function setCodeResponse(): void
     {
         $this->response = '{"code":"my_neat_code"}';
     }
 
-    public function sendRequest(FacebookRequest $request)
+    public function sendRequest(FacebookRequest $request): FacebookResponse
     {
         return new FacebookResponse(
             $request,

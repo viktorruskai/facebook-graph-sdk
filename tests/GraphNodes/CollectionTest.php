@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,26 +23,28 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
 use Facebook\GraphNodes\Collection;
+use JsonException;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends TestCase
 {
 
-    public function testAnExistingPropertyCanBeAccessed()
+    public function testAnExistingPropertyCanBeAccessed(): void
     {
         $graphNode = new Collection(['foo' => 'bar']);
 
         $field = $graphNode->getField('foo');
         $this->assertEquals('bar', $field);
 
-        // @todo v6: Remove this assertion
-        $property = $graphNode->getProperty('foo');
+        $property = $graphNode->getField('foo');
         $this->assertEquals('bar', $property);
     }
 
-    public function testAMissingPropertyWillReturnNull()
+    public function testAMissingPropertyWillReturnNull(): void
     {
         $graphNode = new Collection(['foo' => 'bar']);
         $field = $graphNode->getField('baz');
@@ -48,19 +52,18 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($field, 'Expected the property to return null.');
     }
 
-    public function testAMissingPropertyWillReturnTheDefault()
+    public function testAMissingPropertyWillReturnTheDefault(): void
     {
         $graphNode = new Collection(['foo' => 'bar']);
 
         $field = $graphNode->getField('baz', 'faz');
         $this->assertEquals('faz', $field);
 
-        // @todo v6: Remove this assertion
-        $property = $graphNode->getProperty('baz', 'faz');
+        $property = $graphNode->getField('baz', 'faz');
         $this->assertEquals('faz', $property);
     }
 
-    public function testFalseDefaultsWillReturnSameType()
+    public function testFalseDefaultsWillReturnSameType(): void
     {
         $graphNode = new Collection(['foo' => 'bar']);
 
@@ -71,10 +74,10 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $field);
 
         $field = $graphNode->getField('baz', false);
-        $this->assertSame(false, $field);
+        $this->assertFalse($field);
     }
 
-    public function testTheKeysFromTheCollectionCanBeReturned()
+    public function testTheKeysFromTheCollectionCanBeReturned(): void
     {
         $graphNode = new Collection([
             'key1' => 'foo',
@@ -85,18 +88,20 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $fieldNames = $graphNode->getFieldNames();
         $this->assertEquals(['key1', 'key2', 'key3'], $fieldNames);
 
-        // @todo v6: Remove this assertion
-        $propertyNames = $graphNode->getPropertyNames();
+        $propertyNames = $graphNode->getFieldNames();
         $this->assertEquals(['key1', 'key2', 'key3'], $propertyNames);
     }
 
-    public function testAnArrayCanBeInjectedViaTheConstructor()
+    public function testAnArrayCanBeInjectedViaTheConstructor(): void
     {
         $collection = new Collection(['foo', 'bar']);
         $this->assertEquals(['foo', 'bar'], $collection->asArray());
     }
 
-    public function testACollectionCanBeConvertedToProperJson()
+    /**
+     * @throws JsonException
+     */
+    public function testACollectionCanBeConvertedToProperJson(): void
     {
         $collection = new Collection(['foo', 'bar', 123]);
 
@@ -105,7 +110,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('["foo","bar",123]', $collectionAsString);
     }
 
-    public function testACollectionCanBeCounted()
+    public function testACollectionCanBeCounted(): void
     {
         $collection = new Collection(['foo', 'bar', 'baz']);
 
@@ -114,7 +119,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $collectionCount);
     }
 
-    public function testACollectionCanBeAccessedAsAnArray()
+    public function testACollectionCanBeAccessedAsAnArray(): void
     {
         $collection = new Collection(['foo' => 'bar', 'faz' => 'baz']);
 
@@ -122,7 +127,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('baz', $collection['faz']);
     }
 
-    public function testACollectionCanBeIteratedOver()
+    public function testACollectionCanBeIteratedOver(): void
     {
         $collection = new Collection(['foo' => 'bar', 'faz' => 'baz']);
 

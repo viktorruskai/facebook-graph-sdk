@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,15 +23,21 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\PseudoRandomString;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\PseudoRandomString\McryptPseudoRandomStringGenerator;
+use PHPUnit\Framework\TestCase;
 
-class McryptPseudoRandomStringGeneratorTest extends \PHPUnit_Framework_TestCase
+class McryptPseudoRandomStringGeneratorTest extends TestCase
 {
-    public function testCanGenerateRandomStringOfArbitraryLength()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCanGenerateRandomStringOfArbitraryLength(): void
     {
-        if (version_compare(PHP_VERSION, '7.1', '>=')) {
+        if (PHP_VERSION_ID >= 70100) {
             $this->markTestSkipped('Skipping test mcrypt is deprecated from 7.1');
         }
 
@@ -42,7 +50,7 @@ class McryptPseudoRandomStringGeneratorTest extends \PHPUnit_Framework_TestCase
         $prsg = new McryptPseudoRandomStringGenerator();
         $randomString = $prsg->getPseudoRandomString(10);
 
-        $this->assertEquals(1, preg_match('/^([0-9a-f]+)$/', $randomString));
+        $this->assertMatchesRegularExpression('/^([0-9a-f]+)$/', $randomString);
         $this->assertEquals(10, mb_strlen($randomString));
     }
 }

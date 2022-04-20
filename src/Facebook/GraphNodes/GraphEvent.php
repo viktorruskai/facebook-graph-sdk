@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,7 +23,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
+
+use DateTime;
 
 /**
  * Class GraphEvent
@@ -33,29 +38,25 @@ class GraphEvent extends GraphNode
     /**
      * @var array Maps object key names to GraphNode types.
      */
-    protected static $graphObjectMap = [
-        'cover' => '\Facebook\GraphNodes\GraphCoverPhoto',
-        'place' => '\Facebook\GraphNodes\GraphPage',
-        'picture' => '\Facebook\GraphNodes\GraphPicture',
-        'parent_group' => '\Facebook\GraphNodes\GraphGroup',
+    protected static array $graphObjectMap = [
+        'cover' => GraphCoverPhoto::class,
+        'place' => GraphPage::class,
+        'picture' => GraphPicture::class,
+        'parent_group' => GraphGroup::class,
     ];
 
     /**
      * Returns the `id` (The event ID) as string if present.
-     *
-     * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->getField('id');
     }
 
     /**
      * Returns the `cover` (Cover picture) as GraphCoverPhoto if present.
-     *
-     * @return GraphCoverPhoto|null
      */
-    public function getCover()
+    public function getCover(): ?GraphCoverPhoto
     {
         return $this->getField('cover');
     }
@@ -63,9 +64,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `description` (Long-form description) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->getField('description');
     }
@@ -73,9 +74,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `end_time` (End time, if one has been set) as DateTime if present.
      *
-     * @return \DateTime|null
+     * @noinspection PhpUnused
      */
-    public function getEndTime()
+    public function getEndTime(): ?DateTime
     {
         return $this->getField('end_time');
     }
@@ -83,19 +84,17 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `is_date_only` (Whether the event only has a date specified, but no time) as bool if present.
      *
-     * @return bool|null
+     * @noinspection PhpUnused
      */
-    public function getIsDateOnly()
+    public function getIsDateOnly(): ?bool
     {
         return $this->getField('is_date_only');
     }
 
     /**
      * Returns the `name` (Event name) as string if present.
-     *
-     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->getField('name');
     }
@@ -103,29 +102,25 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `owner` (The profile that created the event) as GraphNode if present.
      *
-     * @return GraphNode|null
+     * @noinspection PhpUnused
      */
-    public function getOwner()
+    public function getOwner(): ?GraphNode
     {
         return $this->getField('owner');
     }
 
     /**
      * Returns the `parent_group` (The group the event belongs to) as GraphGroup if present.
-     *
-     * @return GraphGroup|null
      */
-    public function getParentGroup()
+    public function getParentGroup(): ?GraphGroup
     {
         return $this->getField('parent_group');
     }
 
     /**
      * Returns the `place` (Event Place information) as GraphPage if present.
-     *
-     * @return GraphPage|null
      */
-    public function getPlace()
+    public function getPlace(): ?GraphPage
     {
         return $this->getField('place');
     }
@@ -133,9 +128,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `privacy` (Who can see the event) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getPrivacy()
+    public function getPrivacy(): ?string
     {
         return $this->getField('privacy');
     }
@@ -143,9 +138,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `start_time` (Start time) as DateTime if present.
      *
-     * @return \DateTime|null
+     * @noinspection PhpUnused
      */
-    public function getStartTime()
+    public function getStartTime(): ?DateTime
     {
         return $this->getField('start_time');
     }
@@ -153,9 +148,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `ticket_uri` (The link users can visit to buy a ticket to this event) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getTicketUri()
+    public function getTicketUri(): ?string
     {
         return $this->getField('ticket_uri');
     }
@@ -163,9 +158,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `timezone` (Timezone) as string if present.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getTimezone()
+    public function getTimezone(): ?string
     {
         return $this->getField('timezone');
     }
@@ -173,19 +168,17 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `updated_time` (Last update time) as DateTime if present.
      *
-     * @return \DateTime|null
+     * @noinspection PhpUnused
      */
-    public function getUpdatedTime()
+    public function getUpdatedTime(): ?DateTime
     {
         return $this->getField('updated_time');
     }
 
     /**
      * Returns the `picture` (Event picture) as GraphPicture if present.
-     *
-     * @return GraphPicture|null
      */
-    public function getPicture()
+    public function getPicture(): ?GraphPicture
     {
         return $this->getField('picture');
     }
@@ -193,9 +186,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `attending_count` (Number of people attending the event) as int if present.
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getAttendingCount()
+    public function getAttendingCount(): ?int
     {
         return $this->getField('attending_count');
     }
@@ -203,9 +196,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `declined_count` (Number of people who declined the event) as int if present.
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getDeclinedCount()
+    public function getDeclinedCount(): ?int
     {
         return $this->getField('declined_count');
     }
@@ -213,9 +206,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `maybe_count` (Number of people who maybe going to the event) as int if present.
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getMaybeCount()
+    public function getMaybeCount(): ?int
     {
         return $this->getField('maybe_count');
     }
@@ -223,9 +216,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `noreply_count` (Number of people who did not reply to the event) as int if present.
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getNoreplyCount()
+    public function getNoreplyCount(): ?int
     {
         return $this->getField('noreply_count');
     }
@@ -233,9 +226,9 @@ class GraphEvent extends GraphNode
     /**
      * Returns the `invited_count` (Number of people invited to the event) as int if present.
      *
-     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getInvitedCount()
+    public function getInvitedCount(): ?int
     {
         return $this->getField('invited_count');
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,7 +23,10 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\GraphNodes;
+
+use DateTime;
 
 /**
  * Class GraphSessionInfo
@@ -33,9 +38,9 @@ class GraphSessionInfo extends GraphNode
     /**
      * Returns the application id the token was issued for.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getAppId()
+    public function getAppId(): ?string
     {
         return $this->getField('app_id');
     }
@@ -43,19 +48,17 @@ class GraphSessionInfo extends GraphNode
     /**
      * Returns the application name the token was issued for.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getApplication()
+    public function getApplication(): ?string
     {
         return $this->getField('application');
     }
 
     /**
      * Returns the date & time that the token expires.
-     *
-     * @return \DateTime|null
      */
-    public function getExpiresAt()
+    public function getExpiresAt(): ?DateTime
     {
         return $this->getField('expires_at');
     }
@@ -63,19 +66,17 @@ class GraphSessionInfo extends GraphNode
     /**
      * Returns whether the token is valid.
      *
-     * @return boolean
+     * @noinspection PhpUnused
      */
-    public function getIsValid()
+    public function getIsValid(): bool
     {
         return $this->getField('is_valid');
     }
 
     /**
      * Returns the date & time the token was issued at.
-     *
-     * @return \DateTime|null
      */
-    public function getIssuedAt()
+    public function getIssuedAt(): ?DateTime
     {
         return $this->getField('issued_at');
     }
@@ -83,9 +84,9 @@ class GraphSessionInfo extends GraphNode
     /**
      * Returns the scope permissions associated with the token.
      *
-     * @return array
+     * @noinspection PhpUnused
      */
-    public function getScopes()
+    public function getScopes(): array
     {
         return $this->getField('scopes');
     }
@@ -93,9 +94,9 @@ class GraphSessionInfo extends GraphNode
     /**
      * Returns the login id of the user associated with the token.
      *
-     * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getUserId()
+    public function getUserId(): ?string
     {
         return $this->getField('user_id');
     }

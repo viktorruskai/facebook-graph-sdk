@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +22,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Helpers;
 
 /**
@@ -32,10 +34,8 @@ class FacebookJavaScriptHelper extends FacebookSignedRequestFromInputHelper
 {
     /**
      * Get raw signed request from the cookie.
-     *
-     * @return string|null
      */
-    public function getRawSignedRequest()
+    public function getRawSignedRequest(): ?string
     {
         return $this->getRawSignedRequestFromCookie();
     }

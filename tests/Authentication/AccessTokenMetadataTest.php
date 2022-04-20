@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,14 +23,17 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\Authentication;
 
 use Facebook\Authentication\AccessTokenMetadata;
+use Facebook\Exceptions\FacebookSDKException;
+use PHPUnit\Framework\TestCase;
 
-class AccessTokenMetadataTest extends \PHPUnit_Framework_TestCase
+class AccessTokenMetadataTest extends TestCase
 {
 
-    protected $graphResponseData = [
+    protected array $graphResponseData = [
         'data' => [
             'app_id' => '123',
             'application' => 'Foo App',
@@ -51,7 +56,10 @@ class AccessTokenMetadataTest extends \PHPUnit_Framework_TestCase
         ],
     ];
 
-    public function testDatesGetCastToDateTime()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testDatesGetCastToDateTime(): void
     {
         $metadata = new AccessTokenMetadata($this->graphResponseData);
 
@@ -62,7 +70,10 @@ class AccessTokenMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DateTime', $issuedAt);
     }
 
-    public function testAllTheGettersReturnTheProperValue()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAllTheGettersReturnTheProperValue(): void
     {
         $metadata = new AccessTokenMetadata($this->graphResponseData);
 
@@ -81,56 +92,60 @@ class AccessTokenMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1337', $metadata->getUserId());
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testInvalidMetadataWillThrow()
+    public function testInvalidMetadataWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
         new AccessTokenMetadata(['foo' => 'bar']);
     }
 
-    public function testAnExpectedAppIdWillNotThrow()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAnExpectedAppIdWillNotThrow(): void
     {
         $metadata = new AccessTokenMetadata($this->graphResponseData);
         $metadata->validateAppId('123');
+        $this->assertTrue(true);
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAnUnexpectedAppIdWillThrow()
+    public function testAnUnexpectedAppIdWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
         $metadata = new AccessTokenMetadata($this->graphResponseData);
         $metadata->validateAppId('foo');
     }
 
-    public function testAnExpectedUserIdWillNotThrow()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAnExpectedUserIdWillNotThrow(): void
     {
         $metadata = new AccessTokenMetadata($this->graphResponseData);
         $metadata->validateUserId('1337');
+        $this->assertTrue(true);
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAnUnexpectedUserIdWillThrow()
+    public function testAnUnexpectedUserIdWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
         $metadata = new AccessTokenMetadata($this->graphResponseData);
         $metadata->validateUserId('foo');
     }
 
-    public function testAnActiveAccessTokenWillNotThrow()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAnActiveAccessTokenWillNotThrow(): void
     {
         $this->graphResponseData['data']['expires_at'] = time() + 1000;
         $metadata = new AccessTokenMetadata($this->graphResponseData);
         $metadata->validateExpiration();
+        $this->assertTrue(true);
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAnExpiredAccessTokenWillThrow()
+    public function testAnExpiredAccessTokenWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
         $this->graphResponseData['data']['expires_at'] = time() - 1000;
         $metadata = new AccessTokenMetadata($this->graphResponseData);
         $metadata->validateExpiration();

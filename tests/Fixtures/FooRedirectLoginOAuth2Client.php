@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -28,7 +30,7 @@ use Facebook\Authentication\OAuth2Client;
 
 class FooRedirectLoginOAuth2Client extends OAuth2Client
 {
-    public function getAccessTokenFromCode($code, $redirectUri = '', $machineId = null)
+    public function getAccessTokenFromCode(string $code, string $redirectUri = ''): AccessToken
     {
         return new AccessToken('foo_token_from_code|' . $code . '|' . $redirectUri);
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,60 +23,50 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests;
 
 use Facebook\FacebookApp;
+use PHPUnit\Framework\TestCase;
 
-class FacebookAppTest extends \PHPUnit_Framework_TestCase
+class FacebookAppTest extends TestCase
 {
-    /**
-     * @var FacebookApp
-     */
-    private $app;
+    private FacebookApp $app;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->app = new FacebookApp('id', 'secret');
     }
 
-    public function testGetId()
+    public function testGetId(): void
     {
         $this->assertEquals('id', $this->app->getId());
     }
 
-    public function testGetSecret()
+    public function testGetSecret(): void
     {
         $this->assertEquals('secret', $this->app->getSecret());
     }
 
-    public function testAnAppAccessTokenCanBeGenerated()
+    public function testAnAppAccessTokenCanBeGenerated(): void
     {
         $accessToken = $this->app->getAccessToken();
 
-        $this->assertInstanceOf('Facebook\Authentication\AccessToken', $accessToken);
         $this->assertEquals('id|secret', (string)$accessToken);
     }
 
-    public function testSerialization()
+    public function testSerialization(): void
     {
         $newApp = unserialize(serialize($this->app));
 
-        $this->assertInstanceOf('Facebook\FacebookApp', $newApp);
+        $this->assertInstanceOf(FacebookApp::class, $newApp);
         $this->assertEquals('id', $newApp->getId());
         $this->assertEquals('secret', $newApp->getSecret());
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testOverflowIntegersWillThrow()
+    public function testUnserializedIdsWillBeString(): void
     {
-        new FacebookApp(PHP_INT_MAX + 1, "foo");
-    }
-
-    public function testUnserializedIdsWillBeString()
-    {
-        $newApp = unserialize(serialize(new FacebookApp(1, "foo")));
+        $newApp = unserialize(serialize(new FacebookApp('1', "foo")));
 
         $this->assertSame('1', $newApp->getId());
     }

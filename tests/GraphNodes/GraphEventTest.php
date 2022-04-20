@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,25 +23,32 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests\GraphNodes;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\FacebookResponse;
-use Mockery as m;
 use Facebook\GraphNodes\GraphNodeFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Facebook\GraphNodes\GraphCoverPhoto;
+use Facebook\GraphNodes\GraphPage;
+use Facebook\GraphNodes\GraphPicture;
+use Facebook\GraphNodes\GraphGroup;
 
-class GraphEventTest extends \PHPUnit_Framework_TestCase
+class GraphEventTest extends TestCase
 {
-    /**
-     * @var FacebookResponse
-     */
-    protected $responseMock;
+    protected FacebookResponse $responseMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->responseMock = m::mock('\Facebook\FacebookResponse');
+        $this->responseMock = m::mock(FacebookResponse::class);
     }
 
-    public function testCoverGetsCastAsGraphCoverPhoto()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testCoverGetsCastAsGraphCoverPhoto(): void
     {
         $dataFromGraph = [
             'cover' => ['id' => '1337']
@@ -53,10 +62,14 @@ class GraphEventTest extends \PHPUnit_Framework_TestCase
         $graphObject = $factory->makeGraphEvent();
 
         $cover = $graphObject->getCover();
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphCoverPhoto', $cover);
+        $this->assertInstanceOf(GraphCoverPhoto::class, $cover);
+        m::close();
     }
 
-    public function testPlaceGetsCastAsGraphPage()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testPlaceGetsCastAsGraphPage(): void
     {
         $dataFromGraph = [
             'place' => ['id' => '1337']
@@ -70,10 +83,14 @@ class GraphEventTest extends \PHPUnit_Framework_TestCase
         $graphObject = $factory->makeGraphEvent();
 
         $place = $graphObject->getPlace();
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphPage', $place);
+        $this->assertInstanceOf(GraphPage::class, $place);
+        m::close();
     }
 
-    public function testPictureGetsCastAsGraphPicture()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testPictureGetsCastAsGraphPicture(): void
     {
         $dataFromGraph = [
             'picture' => ['id' => '1337']
@@ -87,10 +104,14 @@ class GraphEventTest extends \PHPUnit_Framework_TestCase
         $graphObject = $factory->makeGraphEvent();
 
         $picture = $graphObject->getPicture();
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphPicture', $picture);
+        $this->assertInstanceOf(GraphPicture::class, $picture);
+        m::close();
     }
 
-    public function testParentGroupGetsCastAsGraphGroup()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testParentGroupGetsCastAsGraphGroup(): void
     {
         $dataFromGraph = [
             'parent_group' => ['id' => '1337']
@@ -104,6 +125,7 @@ class GraphEventTest extends \PHPUnit_Framework_TestCase
         $graphObject = $factory->makeGraphEvent();
 
         $parentGroup = $graphObject->getParentGroup();
-        $this->assertInstanceOf('\Facebook\GraphNodes\GraphGroup', $parentGroup);
+        $this->assertInstanceOf(GraphGroup::class, $parentGroup);
+        m::close();
     }
 }

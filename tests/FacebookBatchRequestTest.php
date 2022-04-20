@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,27 +23,33 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Tests;
 
+use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use Facebook\FacebookApp;
-use Facebook\FacebookRequest;
 use Facebook\FacebookBatchRequest;
+use Facebook\FacebookRequest;
 use Facebook\FileUpload\FacebookFile;
+use InvalidArgumentException;
+use JsonException;
+use PHPUnit\Framework\TestCase;
 
-class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
+class FacebookBatchRequestTest extends TestCase
 {
-    /**
-     * @var FacebookApp
-     */
-    private $app;
 
-    protected function setUp()
+    private FacebookApp $app;
+
+    protected function setUp(): void
     {
         $this->app = new FacebookApp('123', 'foo_secret');
     }
 
-    public function testABatchRequestWillInstantiateWithTheProperProperties()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testABatchRequestWillInstantiateWithTheProperProperties(): void
     {
         $batchRequest = new FacebookBatchRequest($this->app, [], 'foo_token', 'v0.1337');
 
@@ -52,7 +60,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('v0.1337', $batchRequest->getGraphVersion());
     }
 
-    public function testEmptyRequestWillFallbackToBatchDefaults()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testEmptyRequestWillFallbackToBatchDefaults(): void
     {
         $request = new FacebookRequest();
 
@@ -61,7 +72,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertRequestContainsAppAndToken($request, $this->app, 'foo_token');
     }
 
-    public function testRequestWithTokenOnlyWillFallbackToBatchDefaults()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testRequestWithTokenOnlyWillFallbackToBatchDefaults(): void
     {
         $request = new FacebookRequest(null, 'bar_token');
 
@@ -70,7 +84,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertRequestContainsAppAndToken($request, $this->app, 'bar_token');
     }
 
-    public function testRequestWithAppOnlyWillFallbackToBatchDefaults()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testRequestWithAppOnlyWillFallbackToBatchDefaults(): void
     {
         $customApp = new FacebookApp('1337', 'bar_secret');
         $request = new FacebookRequest($customApp);
@@ -80,37 +97,38 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertRequestContainsAppAndToken($request, $customApp, 'foo_token');
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testWillThrowWhenNoThereIsNoAppFallback()
+    public function testWillThrowWhenNoThereIsNoAppFallback(): void
     {
+        $this->expectException(FacebookSDKException::class);
         $batchRequest = new FacebookBatchRequest();
 
         $batchRequest->addFallbackDefaults(new FacebookRequest(null, 'foo_token'));
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testWillThrowWhenNoThereIsNoAccessTokenFallback()
+    public function testWillThrowWhenNoThereIsNoAccessTokenFallback(): void
     {
+        $this->expectException(FacebookSDKException::class);
         $request = new FacebookBatchRequest();
 
         $request->addFallbackDefaults(new FacebookRequest($this->app));
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @throws FacebookSDKException
      */
-    public function testAnInvalidTypeGivenToAddWillThrow()
+    public function testAnInvalidTypeGivenToAddWillThrow(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $request = new FacebookBatchRequest();
 
         $request->add('foo');
     }
 
-    public function testAddingRequestsWillBeFormattedInAnArrayProperly()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAddingRequestsWillBeFormattedInAnArrayProperly(): void
     {
         $requests = [
             null => new FacebookRequest(null, null, 'GET', '/foo'),
@@ -128,7 +146,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertRequestsMatch($requests, $formattedRequests);
     }
 
-    public function testANumericArrayOfRequestsCanBeAdded()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testANumericArrayOfRequestsCanBeAdded(): void
     {
         $requests = [
             new FacebookRequest(null, null, 'GET', '/foo'),
@@ -141,7 +162,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertRequestsMatch($requests, $formattedRequests);
     }
 
-    public function testAnAssociativeArrayOfRequestsCanBeAdded()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testAnAssociativeArrayOfRequestsCanBeAdded(): void
     {
         $requests = [
             'req-one' => new FacebookRequest(null, null, 'GET', '/foo'),
@@ -154,7 +178,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertRequestsMatch($requests, $formattedRequests);
     }
 
-    public function testRequestsCanBeInjectedIntoConstructor()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testRequestsCanBeInjectedIntoConstructor(): void
     {
         $requests = [
             new FacebookRequest(null, null, 'GET', '/foo'),
@@ -168,21 +195,19 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertRequestsMatch($requests, $formattedRequests);
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testAZeroRequestCountWithThrow()
+    public function testAZeroRequestCountWithThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $batchRequest = new FacebookBatchRequest($this->app, [], 'foo_token');
 
         $batchRequest->validateBatchRequestCount();
     }
 
-    /**
-     * @expectedException \Facebook\Exceptions\FacebookSDKException
-     */
-    public function testMoreThanFiftyRequestsWillThrow()
+    public function testMoreThanFiftyRequestsWillThrow(): void
     {
+        $this->expectException(FacebookSDKException::class);
+
         $batchRequest = $this->createBatchRequest();
 
         $this->createAndAppendRequestsTo($batchRequest, 51);
@@ -190,19 +215,24 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $batchRequest->validateBatchRequestCount();
     }
 
-    public function testLessOrEqualThanFiftyRequestsWillNotThrow()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testLessOrEqualThanFiftyRequestsWillNotThrow(): void
     {
         $batchRequest = $this->createBatchRequest();
 
         $this->createAndAppendRequestsTo($batchRequest, 50);
 
         $batchRequest->validateBatchRequestCount();
+        $this->assertTrue(true);
     }
 
     /**
      * @dataProvider requestsAndExpectedResponsesProvider
+     * @throws FacebookSDKException
      */
-    public function testBatchRequestEntitiesProperlyGetConvertedToAnArray($request, $expectedArray)
+    public function testBatchRequestEntitiesProperlyGetConvertedToAnArray($request, $expectedArray): void
     {
         $batchRequest = $this->createBatchRequest();
         $batchRequest->add($request, 'foo_name');
@@ -213,7 +243,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedArray, $batchRequestArray);
     }
 
-    public function requestsAndExpectedResponsesProvider()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function requestsAndExpectedResponsesProvider(): array
     {
         $headers = $this->defaultHeaders();
         $apiVersion = Facebook::DEFAULT_GRAPH_VERSION;
@@ -250,7 +283,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testBatchRequestsWithFilesGetConvertedToAnArray()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testBatchRequestsWithFilesGetConvertedToAnArray(): void
     {
         $request = new FacebookRequest(null, null, 'POST', '/bar', [
             'message' => 'foobar',
@@ -280,7 +316,10 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         ], $batchRequestArray);
     }
 
-    public function testBatchRequestsWithOptionsGetConvertedToAnArray()
+    /**
+     * @throws FacebookSDKException
+     */
+    public function testBatchRequestsWithOptionsGetConvertedToAnArray(): void
     {
         $request = new FacebookRequest(null, null, 'GET', '/bar');
         $batchRequest = $this->createBatchRequest();
@@ -305,7 +344,11 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         ], $batchRequestArray);
     }
 
-    public function testPreppingABatchRequestProperlySetsThePostParams()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testPreppingABatchRequestProperlySetsThePostParams(): void
     {
         $batchRequest = $this->createBatchRequest();
         $batchRequest->add(new FacebookRequest(null, 'bar_token', 'GET', '/foo'), 'foo_name');
@@ -314,7 +357,7 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
 
         $params = $batchRequest->getParams();
 
-        $expectedHeaders = json_encode($this->defaultHeaders());
+        $expectedHeaders = json_encode($this->defaultHeaders(), JSON_THROW_ON_ERROR);
         $version = Facebook::DEFAULT_GRAPH_VERSION;
         $expectedBatchParams = [
             'batch' => '[{"headers":' . $expectedHeaders . ',"method":"GET","relative_url":"\\/' . $version . '\\/foo?access_token=bar_token&appsecret_proof=2ceec40b7b9fd7d38fff1767b766bcc6b1f9feb378febac4612c156e6a8354bd","name":"foo_name"},'
@@ -326,7 +369,11 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedBatchParams, $params);
     }
 
-    public function testPreppingABatchRequestProperlyMovesTheFiles()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testPreppingABatchRequestProperlyMovesTheFiles(): void
     {
         $batchRequest = $this->createBatchRequest();
         $batchRequest->add(new FacebookRequest(null, 'bar_token', 'GET', '/foo'), 'foo_name');
@@ -341,7 +388,7 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
 
         $attachedFiles = implode(',', array_keys($files));
 
-        $expectedHeaders = json_encode($this->defaultHeaders());
+        $expectedHeaders = json_encode($this->defaultHeaders(), JSON_THROW_ON_ERROR);
         $version = Facebook::DEFAULT_GRAPH_VERSION;
         $expectedBatchParams = [
             'batch' => '[{"headers":' . $expectedHeaders . ',"method":"GET","relative_url":"\\/' . $version . '\\/foo?access_token=bar_token&appsecret_proof=2ceec40b7b9fd7d38fff1767b766bcc6b1f9feb378febac4612c156e6a8354bd","name":"foo_name"},'
@@ -353,7 +400,11 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedBatchParams, $params);
     }
 
-    public function testPreppingABatchRequestWithOptionsProperlySetsThePostParams()
+    /**
+     * @throws FacebookSDKException
+     * @throws JsonException
+     */
+    public function testPreppingABatchRequestWithOptionsProperlySetsThePostParams(): void
     {
         $batchRequest = $this->createBatchRequest();
         $batchRequest->add(new FacebookRequest(null, null, 'GET', '/foo'), [
@@ -364,7 +415,7 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $batchRequest->prepareRequestsForBatch();
         $params = $batchRequest->getParams();
 
-        $expectedHeaders = json_encode($this->defaultHeaders());
+        $expectedHeaders = json_encode($this->defaultHeaders(), JSON_THROW_ON_ERROR);
         $version = Facebook::DEFAULT_GRAPH_VERSION;
 
         $expectedBatchParams = [
@@ -377,7 +428,7 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedBatchParams, $params);
     }
 
-    private function assertRequestContainsAppAndToken(FacebookRequest $request, FacebookApp $expectedApp, $expectedToken)
+    private function assertRequestContainsAppAndToken(FacebookRequest $request, FacebookApp $expectedApp, $expectedToken): void
     {
         $app = $request->getApp();
         $token = $request->getAccessToken();
@@ -386,7 +437,7 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedToken, $token);
     }
 
-    private function defaultHeaders()
+    private function defaultHeaders(): array
     {
         $headers = [];
         foreach (FacebookRequest::getDefaultHeaders() as $name => $value) {
@@ -396,19 +447,28 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         return $headers;
     }
 
-    private function createAndAppendRequestsTo(FacebookBatchRequest $batchRequest, $number)
+    /**
+     * @throws FacebookSDKException
+     */
+    private function createAndAppendRequestsTo(FacebookBatchRequest $batchRequest, $number): void
     {
         for ($i = 0; $i < $number; $i++) {
             $batchRequest->add(new FacebookRequest());
         }
     }
 
-    private function createBatchRequest()
+    /**
+     * @throws FacebookSDKException
+     */
+    private function createBatchRequest(): FacebookBatchRequest
     {
         return new FacebookBatchRequest($this->app, [], 'foo_token');
     }
 
-    private function createBatchRequestWithRequests(array $requests)
+    /**
+     * @throws FacebookSDKException
+     */
+    private function createBatchRequestWithRequests(array $requests): FacebookBatchRequest
     {
         $batchRequest = $this->createBatchRequest();
         $batchRequest->add($requests);
@@ -416,7 +476,7 @@ class FacebookBatchRequestTest extends \PHPUnit_Framework_TestCase
         return $batchRequest;
     }
 
-    private function assertRequestsMatch($requests, $formattedRequests)
+    private function assertRequestsMatch($requests, $formattedRequests): void
     {
         $expectedRequests = [];
         foreach ($requests as $name => $request) {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\PseudoRandomString;
 
 use Facebook\Exceptions\FacebookSDKException;
@@ -33,7 +36,7 @@ class UrandomPseudoRandomStringGenerator implements PseudoRandomStringGeneratorI
     /**
      * @const string The error message when generating the string fails.
      */
-    const ERROR_MESSAGE = 'Unable to generate a cryptographically secure pseudo-random string from /dev/urandom. ';
+    public const ERROR_MESSAGE = 'Unable to generate a cryptographically secure pseudo-random string from /dev/urandom. ';
 
     /**
      * @throws FacebookSDKException
@@ -58,7 +61,7 @@ class UrandomPseudoRandomStringGenerator implements PseudoRandomStringGeneratorI
     /**
      * @inheritdoc
      */
-    public function getPseudoRandomString($length)
+    public function getPseudoRandomString(int $length): string
     {
         $this->validateLength($length);
 

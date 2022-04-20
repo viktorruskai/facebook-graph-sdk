@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright 2017 Facebook, Inc.
  *
@@ -21,6 +23,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  */
+
 namespace Facebook\Http;
 
 /**
@@ -32,8 +35,6 @@ interface RequestBodyInterface
 {
     /**
      * Get the body of the request to send to Graph.
-     *
-     * @return string
      */
-    public function getBody();
+    public function getBody(): string;
 }
