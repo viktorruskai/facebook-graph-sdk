@@ -36,11 +36,7 @@ jobs:
       - name: Install composer dependencies
         run: composer install --no-scripts
       - name: Create a copy of file for credentials
-        run: |
-          cp tests/FacebookTestCredentials.php.dist tests/FacebookTestCredentials.php
-          sed 's/\public static $appId = "[^"]*"/public static $appId = "test"/' tests/FacebookTestCredentials.php
-          sed 's/\public static $appSecret = "[^"]*"/public static $appSecret = "test"/' tests/FacebookTestCredentials.php
-          cat tests/FacebookTestCredentials.php
+        run: cp tests/FacebookTestCredentials.php.dist tests/FacebookTestCredentials.php
       - name: Start tests
         env:
           FACEBOOK_APP_ID: test
