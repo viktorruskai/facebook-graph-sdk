@@ -9,7 +9,7 @@ This repository is forked from [original package](https://github.com/facebookarc
 The Facebook PHP SDK can be installed with [Composer](https://getcomposer.org/). Run this command:
 
 ```bash
-$ composer require viktorruskai/php-graph-sdk
+$ composer require viktorruskai/facebook-graph-sdk
 ```
 
 ## Usage
