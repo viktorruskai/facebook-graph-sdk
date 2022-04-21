@@ -57,14 +57,16 @@ class McryptPseudoRandomStringGenerator implements PseudoRandomStringGeneratorIn
     {
         $this->validateLength($length);
 
-        $binaryString = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
+        $binaryString = (string)$length;
+//         Todo: `mcrypt_create_iv` was deprecated
+//        $binaryString = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
 
-        if ($binaryString === false) {
-            throw new FacebookSDKException(
-                static::ERROR_MESSAGE .
-                'mcrypt_create_iv() returned an error.'
-            );
-        }
+//        if ($binaryString === false) {
+//            throw new FacebookSDKException(
+//                static::ERROR_MESSAGE .
+//                'mcrypt_create_iv() returned an error.'
+//            );
+//        }
 
         return $this->binToHex($binaryString, $length);
     }
