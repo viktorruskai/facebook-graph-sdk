@@ -114,7 +114,6 @@ class OAuth2Client
     /**
      * Generates an authorization URL to begin the process of authenticating a user.
      */
-    #[Pure]
     public function getAuthorizationUrl(string $redirectUrl, string $state, array $scope = [], array $params = [], string $separator = '&'): string
     {
         $params += [
@@ -245,8 +244,6 @@ class OAuth2Client
     /**
      * Returns the client_* params for OAuth requests.
      */
-    #[Pure]
-    #[ArrayShape(['client_id' => "string", 'client_secret' => "string"])]
     protected function getClientParams(): array
     {
         return [

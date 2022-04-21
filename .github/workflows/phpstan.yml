@@ -1,4 +1,4 @@
-name: PHPUnit
+name: PHPStan
 
 on: push
 #on:
@@ -10,7 +10,7 @@ on: push
 #      - master
 
 jobs:
-  phpunit:
+  phpstan:
     name: Test application
     runs-on: ubuntu-latest
     container:

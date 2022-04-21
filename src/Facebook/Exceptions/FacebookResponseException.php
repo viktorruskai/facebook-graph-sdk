@@ -85,14 +85,14 @@ class FacebookResponseException extends FacebookSDKException
                 case 463:
                 case 464:
                 case 467:
-                    return new static($response, new FacebookAuthenticationException($message, $code));
+                    return new self($response, new FacebookAuthenticationException($message, $code));
                 // Video upload resumable error
                 case 1363030:
                 case 1363019:
                 case 1363033:
                 case 1363021:
                 case 1363041:
-                    return new static($response, new FacebookResumableUploadException($message, $code));
+                    return new self($response, new FacebookResumableUploadException($message, $code));
                 case 1363037:
                     $previousException = new FacebookResumableUploadException($message, $code);
 
@@ -102,7 +102,7 @@ class FacebookResponseException extends FacebookSDKException
                     $endOffset = isset($data['error']['error_data']['end_offset']) ? (int)$data['error']['error_data']['end_offset'] : null;
                     $previousException->setEndOffset($endOffset);
 
-                    return new static($response, $previousException);
+                    return new self($response, $previousException);
             }
         }
 
@@ -111,12 +111,12 @@ class FacebookResponseException extends FacebookSDKException
             case 100:
             case 102:
             case 190:
-                return new static($response, new FacebookAuthenticationException($message, $code));
+                return new self($response, new FacebookAuthenticationException($message, $code));
 
             // Server issue, possible downtime
             case 1:
             case 2:
-                return new static($response, new FacebookServerException($message, $code));
+                return new self($response, new FacebookServerException($message, $code));
 
             // API Throttling
             case 4:
@@ -124,25 +124,25 @@ class FacebookResponseException extends FacebookSDKException
             case 32:
             case 341:
             case 613:
-                return new static($response, new FacebookThrottleException($message, $code));
+                return new self($response, new FacebookThrottleException($message, $code));
 
             // Duplicate Post
             case 506:
-                return new static($response, new FacebookClientException($message, $code));
+                return new self($response, new FacebookClientException($message, $code));
         }
 
         // Missing Permissions
         if ($code === 10 || ($code >= 200 && $code <= 299)) {
-            return new static($response, new FacebookAuthorizationException($message, $code));
+            return new self($response, new FacebookAuthorizationException($message, $code));
         }
 
         // OAuth authentication error
         if (isset($data['error']['type']) && $data['error']['type'] === 'OAuthException') {
-            return new static($response, new FacebookAuthenticationException($message, $code));
+            return new self($response, new FacebookAuthenticationException($message, $code));
         }
 
         // All others
-        return new static($response, new FacebookOtherException($message, $code));
+        return new self($response, new FacebookOtherException($message, $code));
     }
 
     /**
