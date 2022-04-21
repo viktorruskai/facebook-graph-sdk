@@ -52,6 +52,6 @@
   "scripts": {
     "tests": "./vendor/bin/phpunit",
     "tests-without-http-requests": "./vendor/bin/phpunit --exclude-group integration",
-    "phpstan": "./vendor/bin/phpstan analyse ./src --memory-limit 256M"
+    "phpstan": "./vendor/bin/phpstan analyse ./src -l 2 --memory-limit 256M"
   }
 }

@@ -36,9 +36,6 @@ class FacebookStreamHttpClient implements FacebookHttpClientInterface
      */
     protected FacebookStream $facebookStream;
 
-    /**
-     * @param FacebookStream|null Procedural stream wrapper as object.
-     */
     public function __construct(FacebookStream $facebookStream = null)
     {
         $this->facebookStream = $facebookStream ?: new FacebookStream();
