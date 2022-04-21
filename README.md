@@ -1,6 +1,6 @@
 # Facebook Graph SDK
 
-[![Latest Stable Version](https://img.shields.io/v/release/viktorruskai/facebook-graph-sdk)](https://packagist.org/packages/viktorruskai/facebook-graph-sdk)
+[![Latest Stable Version](https://img.shields.io/github/v/release/viktorruskai/facebook-graph-sdk)](https://packagist.org/packages/viktorruskai/facebook-graph-sdk)
 
 This repository is forked from [original package](https://github.com/facebookarchive/php-graph-sdk). It was refactored to handle PHP 8.0 and PHP 8.1.
 
