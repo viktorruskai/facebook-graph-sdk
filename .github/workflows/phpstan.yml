@@ -11,7 +11,7 @@ on: push
 
 jobs:
   phpstan:
-    name: Test application
+    name: Run PHPStan
     runs-on: ubuntu-latest
     container:
       image: kirschbaumdevelopment/laravel-test-runner:8.1

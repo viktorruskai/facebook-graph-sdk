@@ -11,7 +11,7 @@ on: push
 
 jobs:
   phpunit:
-    name: Test application
+    name: Test application with PHPUnit
     runs-on: ubuntu-latest
     container:
       image: kirschbaumdevelopment/laravel-test-runner:8.1
@@ -23,6 +23,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
+          extensions: mcrypt
       - name: Install composer dependencies
         run: composer install --no-scripts
       - name: Start tests
