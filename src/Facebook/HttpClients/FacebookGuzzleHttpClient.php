@@ -28,7 +28,7 @@ use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Http\GraphRawResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 class FacebookGuzzleHttpClient implements FacebookHttpClientInterface
@@ -59,7 +59,8 @@ class FacebookGuzzleHttpClient implements FacebookHttpClientInterface
         } catch (RequestException $e) {
             $rawResponse = $e->getResponse();
 
-            if ($e->getPrevious() instanceof RingException || !$rawResponse instanceof ResponseInterface) {
+//            if ($e->getPrevious() instanceof RingException || !$rawResponse instanceof ResponseInterface) {
+            if (!$rawResponse instanceof Response) {
                 throw new FacebookSDKException($e->getMessage(), $e->getCode());
             }
         }

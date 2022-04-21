@@ -219,9 +219,9 @@ class GraphEdge extends Collection
     /**
      * @inheritDoc
      */
-    public function map(Closure $callback): static
+    public function map(Closure $callback): self
     {
-        return new static(
+        return new self(
             $this->request,
             array_map($callback, $this->items, array_keys($this->items)),
             $this->metaData,

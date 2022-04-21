@@ -124,7 +124,6 @@ class AccessToken
     /**
      * Returns the access token as a string.
      */
-    #[Pure]
     public function __toString(): string
     {
         return $this->getValue();
