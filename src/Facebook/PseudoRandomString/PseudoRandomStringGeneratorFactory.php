@@ -54,9 +54,6 @@ class PseudoRandomStringGeneratorFactory
         if ('random_bytes' === $generator) {
             return new RandomBytesPseudoRandomStringGenerator();
         }
-        if ('mcrypt' === $generator) {
-            return new McryptPseudoRandomStringGenerator();
-        }
         if ('openssl' === $generator) {
             return new OpenSslPseudoRandomStringGenerator();
         }
@@ -78,12 +75,6 @@ class PseudoRandomStringGeneratorFactory
         // Check for PHP 7's CSPRNG first to keep mcrypt deprecation messages from appearing in PHP 7.1.
         if (function_exists('random_bytes')) {
             return new RandomBytesPseudoRandomStringGenerator();
-        }
-
-        // Since openssl_random_pseudo_bytes() can sometimes return non-cryptographically
-        // secure pseudo-random strings (in rare cases), we check for mcrypt_create_iv() next.
-        if (function_exists('mcrypt_create_iv')) {
-            return new McryptPseudoRandomStringGenerator();
         }
 
         if (function_exists('openssl_random_pseudo_bytes')) {
