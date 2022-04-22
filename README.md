@@ -1,5 +1,8 @@
 # Facebook Graph SDK
 
+[![PHP](https://img.shields.io/packagist/php-v/viktorruskai/facebook-graph-sdk?label=PHP)](https://github.com/viktorruskai/facebook-graph-sdk)
+[![PHPUnit](https://github.com/viktorruskai/facebook-graph-sdk/actions/workflows/phpunit.yml/badge.svg)](https://github.com/viktorruskai/facebook-graph-sdk/actions/workflows/phpunit.yml)
+[![PHPStan](https://github.com/viktorruskai/facebook-graph-sdk/actions/workflows/phpstan.yml/badge.svg)](https://github.com/viktorruskai/facebook-graph-sdk/actions/workflows/phpstan.yml)
 [![Latest Stable Version](https://img.shields.io/github/v/release/viktorruskai/facebook-graph-sdk)](https://packagist.org/packages/viktorruskai/facebook-graph-sdk)
 
 This repository is forked from [original package](https://github.com/facebookarchive/php-graph-sdk). It was refactored to handle PHP 8.0 and PHP 8.1.
