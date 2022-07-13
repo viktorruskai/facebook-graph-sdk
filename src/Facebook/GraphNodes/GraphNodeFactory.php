@@ -257,12 +257,12 @@ class GraphNodeFactory
      *
      * @param array $data The array of data to iterate over.
      * @param string|null $subclassName The subclass to cast this collection to.
-     * @param string|null $parentKey The key of this data (Graph edge).
+     * @param string|int|null $parentKey The key of this data (Graph edge).
      * @param string|null $parentNodeId The parent Graph node ID.
      *
      * @throws FacebookSDKException
      */
-    public function castAsGraphNodeOrGraphEdge(array $data, ?string $subclassName = null, ?string $parentKey = null, ?string $parentNodeId = null): GraphEdge|GraphNode
+    public function castAsGraphNodeOrGraphEdge(array $data, ?string $subclassName = null, string|int|null $parentKey = null, ?string $parentNodeId = null): GraphEdge|GraphNode
     {
         if (isset($data['data'])) {
             // Create GraphEdge
